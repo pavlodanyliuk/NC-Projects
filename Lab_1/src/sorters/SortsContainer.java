@@ -10,52 +10,58 @@ public class SortsContainer {
        super();
     }
 
-    public static void bubbleSort(int[] array){
+    public static int[] bubbleSort(int[] array){
         BubbleSort bubbleSort = new BubbleSort(array);
 
-        startSort(bubbleSort);
+        return startSort(bubbleSort);
     }
 
-    public static void bubbleReverseSort(int[] array) {
+    public static int[] bubbleReverseSort(int[] array) {
         BubbleReverseSort bubbleReverseSort = new BubbleReverseSort(array);
 
-        startSort(bubbleReverseSort);
+        return startSort(bubbleReverseSort);
     }
-    public static void mergeSort(int[] array){
+    public static int[] mergeSort(int[] array){
         MergeSort mergeSort = new MergeSort(array);
 
-        startSort(mergeSort);
+        return startSort(mergeSort);
     }
 
-    public static void shellSort(int[] array){
+    public static int[] shellSort(int[] array){
         ShellSort shellSort = new ShellSort(array);
 
-        startSort(shellSort);
+        return startSort(shellSort);
     }
 
-    public static void quickSort(int[] array){
+    public static int[] quickSort(int[] array){
         QuickSort quickSort = new QuickSort(array);
 
-        startSort(quickSort);
+        return startSort(quickSort);
     }
 
-    public static void arraysSort(int[] array){
+    public static int[] arraysSort(int[] array){
+        int[] newArray = new int[array.length];
+        System.arraycopy(array, 0, newArray, 0, array.length);
         System.out.println("Arrays.sort(int[] arr):");
-        printArray(array);
+        printArray(newArray);
         System.out.println("(before)");
 
-        Arrays.sort(array);
+        Arrays.sort(newArray);
 
-        printArray(array);
+        printArray(newArray);
         System.out.println("(after)");
+        return newArray;
     }
 
 
 
-    private static void startSort(Sorting sorting){
+    private static int[] startSort(Sorting sorting){
         System.out.println(sorting + "(before)");
+
         sorting.sort();
+
         System.out.println(sorting +  "(after)");
+        return sorting.getArray();
     }
 
     private static void printArray(int[] arr){

@@ -3,7 +3,7 @@ package sorters.algorithms;
 public abstract class Sorting {
     protected int[] array;
     protected int len;
-    protected String name;
+    protected static String name;
 
     public Sorting (int[] array){
         len = array.length;
