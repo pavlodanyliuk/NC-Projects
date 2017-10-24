@@ -1,4 +1,4 @@
-package sorters;
+package sorters.algorithms;
 
 public abstract class Sorting {
     protected int[] array;

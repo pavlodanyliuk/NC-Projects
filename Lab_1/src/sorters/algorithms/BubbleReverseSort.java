@@ -1,4 +1,4 @@
-package sorters;
+package sorters.algorithms;
 
 public class BubbleReverseSort extends BubbleSort {
     public BubbleReverseSort(int[] array){
