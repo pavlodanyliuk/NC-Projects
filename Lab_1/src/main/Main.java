@@ -14,17 +14,22 @@ public class Main {
 //        SortsContainer.arraysSort(arr);
 //
 
-        int[] arr = Filler.genSortedArray(10,0,20);
+        int[] arr1 = Filler.genSortedArray(10,0,20);
+        int[] arr2 = Filler.genSortedArrayWithX(10,0,20);
+        int[] arr3 = Filler.genRevSortedArray(10,0,20);
+        int[] arr4 = Filler.genRandomArray(10,0,20);
+
+        printArray(arr1);
+        printArray(arr2);
+        printArray(arr3);
+        printArray(arr4);
+
+    }
+
+    private static void printArray(int[] arr){
         for(int i : arr){
             System.out.print(i + " ");
         }
         System.out.println();
-
-        int[] arr1 = Filler.genSortedArray(10,0,20);
-        for(int i : arr1){
-            System.out.print(i + " ");
-        }
-        System.out.println();
-
     }
 }
