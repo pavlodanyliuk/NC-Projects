@@ -1,13 +1,13 @@
-package main;
-
+import analyzer.Analyzer;
 import fillers.Filler;
 import sorters.SortsContainer;
+import sorters.algorithms.Sorting;
 
 public class Main {
     public static void main(String[] args) {
         int[] arr = { 4, 8, -5, 75, 12, 45, 1, 79, -10, 0 , 2, 0,12};
-        SortsContainer.bubbleDirectSort(arr);
-        SortsContainer.bubbleReverseSort(arr);
+//        SortsContainer.bubbleDirectSort(arr);
+//        SortsContainer.bubbleReverseSort(arr);
 //        SortsContainer.mergeSort(arr);
 //        SortsContainer.quickSort(arr);
 //        SortsContainer.shellSort(arr);
@@ -23,6 +23,11 @@ public class Main {
 //        printArray(arr2);
 //        printArray(arr3);
 //        printArray(arr4);
+
+        Analyzer.analyze();
+
+
+
 
     }
 
