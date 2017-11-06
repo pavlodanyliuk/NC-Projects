@@ -1,12 +1,34 @@
 package sorters.algorithms;
 
+/**
+ *
+ * <b>Shell sort</b>
+ * <br>For sort an array, using the shell sort
+ *
+ * @author Pavlo Danyliuk
+ *
+ * @version 1.0
+ */
 public class ShellSort extends Sorting {
 
+    /**
+     * Constructor of Shell sort, using the {@link Sorting#Sorting(int[]) super constructor}
+     *
+     * @param array - array to sort
+     *
+     * */
     public ShellSort(int[] array){
         super(array);
         setName("Shell sort");
     }
 
+
+    /**
+     * Override method for sorting the array
+     *
+     * @see Sorting#sort()
+     * @return
+     * */
     @Override
     public void sort() {
 

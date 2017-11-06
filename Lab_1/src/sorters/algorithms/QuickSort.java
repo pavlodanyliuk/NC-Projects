@@ -1,7 +1,24 @@
 package sorters.algorithms;
 
+/**
+ *
+ * <b>Quick sort</b>
+ * <br>For sort an array, using the quick sort
+ *
+ * @author Pavlo Danyliuk
+ *
+ * @version 1.0
+ */
+
 public class QuickSort extends Sorting{
 
+
+    /**
+     * Constructor of Quick sort, using the {@link Sorting#Sorting(int[]) super constructor}
+     *
+     * @param array - array to sort
+     *
+     * */
     public QuickSort(int[] array){
         super(array);
         setName("Quick Sort");
@@ -56,6 +73,12 @@ public class QuickSort extends Sorting{
         }
     }
 
+    /**
+     * Override method for sorting the array
+     *
+     * @see Sorting#sort()
+     * @return
+     * */
     @Override
     public void sort() {
         reverseSort(0, len-1);

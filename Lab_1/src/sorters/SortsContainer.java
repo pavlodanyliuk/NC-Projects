@@ -1,6 +1,8 @@
 package sorters;
 
 import sorters.algorithms.*;
+import sorters.algorithms.bubblepackage.BubbleDirectSort;
+import sorters.algorithms.bubblepackage.BubbleReverseSort;
 
 import java.util.Arrays;
 
@@ -10,8 +12,8 @@ public class SortsContainer {
        super();
     }
 
-    public static int[] bubbleSort(int[] array){
-        BubbleSort bubbleSort = new BubbleSort(array);
+    public static int[] bubbleDirectSort(int[] array){
+        BubbleDirectSort bubbleSort = new BubbleDirectSort(array);
 
         return startSort(bubbleSort);
     }

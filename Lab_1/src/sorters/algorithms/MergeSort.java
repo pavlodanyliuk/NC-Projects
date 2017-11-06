@@ -1,6 +1,23 @@
 package sorters.algorithms;
 
+/**
+ *
+ * <b>Merge sort</b>
+ * <br>For sort an array, using the merge sort
+ *
+ * @author Pavlo Danyliuk
+ *
+ * @version 1.0
+ */
+
 public class MergeSort extends Sorting {
+
+    /**
+     * Constructor of Merge sort, using the {@link Sorting#Sorting(int[]) super constructor}
+     *
+     * @param array - array to sort
+     *
+     * */
 
     public MergeSort(int[] array){
         super(array);
@@ -84,6 +101,13 @@ public class MergeSort extends Sorting {
         }
     }
 
+
+    /**
+     * Override method for sorting the array
+     *
+     * @see Sorting#sort()
+     * @return
+     * */
     @Override
     public void sort() {
         recursiveSort(array, 0, len - 1);
