@@ -56,7 +56,6 @@ public class SortsContainer {
     }
 
 
-
     private static int[] startSort(Sorting sorting){
         System.out.println(sorting + "(before)");
 

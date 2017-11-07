@@ -10,7 +10,10 @@ package fillers;
 //        (max, ... , 7, 3, 2, 1);
 //        4) Массива, содержащего элементы, расположенные случайным образом
 
+import annotations.FillerMet;
+
 import java.util.*;
+
 
 public class Filler {
     private static Random rand;
@@ -23,10 +26,13 @@ public class Filler {
         super();
     }
 
+
+    @FillerMet
     public static int[] genSortedArray(final int length, final int minVal, final int maxVal) {
         return transferListToArray(getSortedList(length, minVal, maxVal));
     }
 
+    @FillerMet
     public static int[] genSortedArrayWithX (final int length, final int minVal, final int maxVal){
         List<Integer> data = getSortedList(length - 1, minVal, maxVal);
         data.add(getRandomVal(minVal, maxVal));
@@ -34,6 +40,7 @@ public class Filler {
         return transferListToArray(data);
     }
 
+    @FillerMet
     public static int[] genRevSortedArray (final int length, final int minVal, final int maxVal) {
         List<Integer> data = getSortedList(length, minVal, maxVal);
         Collections.reverse(data);
@@ -41,6 +48,7 @@ public class Filler {
         return transferListToArray(data);
     }
 
+    @FillerMet
     public static int[] genRandomArray(final int length, final int minVal, final int maxVal){
         List<Integer> data = new ArrayList<>(length);
 
