@@ -8,36 +8,60 @@ import sorters.algorithms.Sorting;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
+
+
+/**
+ *<b>Class for get statistics about all sorting method with different generated arrays</b>
+ *
+ * @author Pavlo Danyliuk
+ * @version 1.0
+ * @see Sorting
+ * @see Filler
+ */
 
 public class Analyzer {
 
-    static final int LEN10 = 10;
-    static final int LEN100 = 100;
-    static final int LEN1000 = 1_000;
+    private static final int LEN10 = 10;
+    private static final int LEN100 = 100;
+    private static final int LEN1000 = 1_000;
+    private static final int LEN10000 = 10_100;
 
-
-    public static void analyze(){
+    /**
+     * Return {@code Map<Method, Map<Class<? extends Sorting>, long[]>>}
+     * <br>The map consist of all method to fill array and statistics about all sorted for this methods
+     * <br>This map {@code Map<Class<? extends Sorting>, long[]>} contains all method of sort and time of
+     * run in nanoseconds for 10, 100, 1 000 and 10 000 elements respectively.
+     *
+     * @return Map<Method, Map<Class<? extends Sorting>, long[]>>
+     */
+    public static Map<Method, Map<Class<? extends Sorting>, long[]>> analyze(){
 
         Reflections reflections = new Reflections();
 
+        //Get all sorting types and deleting abstract methods
         Set<Class<? extends Sorting>> sortingTypes = reflections.getSubTypesOf(Sorting.class);
-//
-//        for(Class<? extends Sorting> s : subTypes){
-//            System.out.println(s.getCanonicalName());
-//        }
+        deleteAllAbstractClasses(sortingTypes);
 
+        //Get all generating methods
         List<Method> genMethods = getMethodsAnnotatedWith(Filler.class, FillerMet.class);
 
-//        for(Method m : l){
-//            System.out.println(m.getName());
-//        }
-
+        //Get stats
         Map<Method, Map<Class<? extends Sorting>, long[]>> map = stats(genMethods, sortingTypes);
 
+//        for(Map.Entry<Method, Map<Class<? extends Sorting>, long[]>> n : map.entrySet()){
+//            System.out.println(n.getKey().getName() + ":");
+//            for(Map.Entry<Class<? extends Sorting>, long[]> m : n.getValue().entrySet()){
+//
+//                System.out.print(m.getKey().getSimpleName() + " : " + m.getValue()[0] + " " + m.getValue()[1] + " " + m.getValue()[2] + " " + m.getValue()[3] + "\n");
+//            }
+//            System.out.println("-------------");
+//        }
 
-
+        return map;
     }
+
 
 
     private static Map<Method, Map<Class<? extends Sorting>, long[]>> stats (List<Method> genMethods, Set<Class<? extends Sorting>> sortingSet){
@@ -48,12 +72,14 @@ public class Analyzer {
             int[] arr10 = genArray(typeGenArray, LEN10);
             int[] arr100 = genArray(typeGenArray, LEN100);
             int[] arr1000 = genArray(typeGenArray, LEN1000);
+            int[] arr10000 = genArray(typeGenArray, LEN10000);
 
             ArrayList<int[]> list = new ArrayList<>();
 
             list.add(arr10);
             list.add(arr100);
             list.add(arr1000);
+            list.add(arr10000);
 
             map.put(typeGenArray, mapOfTimes(sortingSet, list));
         }
@@ -63,7 +89,7 @@ public class Analyzer {
     }
 
 
-    private static Map<Class<? extends Sorting>, long[]> mapOfTimes(Set<Class<? extends Sorting>> sortingSet, ArrayList<int[]> arrList){
+    private static Map<Class<? extends Sorting>, long[]>  mapOfTimes(Set<Class<? extends Sorting>> sortingSet, ArrayList<int[]> arrList){
         final int len = arrList.size();
 
         Map<Class<? extends Sorting>, long[]> sortingMap = new HashMap<>();
@@ -79,6 +105,7 @@ public class Analyzer {
 
         return sortingMap;
     }
+
     private static long time (Class<? extends Sorting> clazz, int[] arr){
         Sorting sorting = null;
         try {
@@ -104,9 +131,7 @@ public class Analyzer {
         int[] arr = null;
         try {
             arr = (int[])(method.invoke(null, len, 0 , len));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return arr;
@@ -127,5 +152,16 @@ public class Analyzer {
             klass = klass.getSuperclass();
         }
         return methods;
+    }
+
+
+    private static void deleteAllAbstractClasses(Set<Class<? extends Sorting>> sortingTypes) {
+        Iterator<Class<? extends Sorting>> iterator = sortingTypes.iterator();
+        while (iterator.hasNext()) {
+            Class<? extends Sorting> element = iterator.next();
+            if (Modifier.isAbstract(element.getModifiers())) {
+                iterator.remove();
+            }
+        }
     }
 }

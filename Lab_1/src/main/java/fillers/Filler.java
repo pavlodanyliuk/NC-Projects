@@ -1,18 +1,20 @@
 package fillers;
 
-//Написать методы, генерирующие массивы целых чисел заданной длинны
-//        следующими способами:
-//        1) Уже отсортированного массива
-//        (1, 2, 3, 7, ....., max);
-//        2) Отсортированного массива, в конец которого дописан случайный элемент
-//        (1, 2, 3, 7, ....., max, X);
-//        3) Массива, отсортированного в обратном порядке
-//        (max, ... , 7, 3, 2, 1);
-//        4) Массива, содержащего элементы, расположенные случайным образом
-
 import annotations.FillerMet;
 
 import java.util.*;
+
+/**
+ * <b>Class contains different methods for generate arrays</b>
+ * <br>Can't to create an objects of the class
+ * <br>{@link fillers.Filler#genSortedArray(int, int, int) generate sorting array}
+ * <br>{@link fillers.Filler#genRandomArray(int, int, int) generate randoms array}
+ * <br>{@link fillers.Filler#genRevSortedArray(int, int, int) generate reverce sorting array}
+ * <br>{@link fillers.Filler#genSortedArrayWithX(int, int, int) generate sorting array with random number in end}
+ *
+ * @author Pavlo Danyliuk
+ * @version 1.0
+ */
 
 
 public class Filler {
@@ -27,11 +29,25 @@ public class Filler {
     }
 
 
+    /**
+     *Generate a sorted array
+     * @param length the length of future array
+     * @param minVal the minimum limit of values element with array
+     * @param maxVal the maximum limit of values element with array
+     * @return int[]
+     */
     @FillerMet
     public static int[] genSortedArray(final int length, final int minVal, final int maxVal) {
         return transferListToArray(getSortedList(length, minVal, maxVal));
     }
 
+    /**
+     *Generate a sorted array with random number in the end
+     * @param length the length of future array
+     * @param minVal the minimum limit of values element with array
+     * @param maxVal the maximum limit of values element with array
+     * @return int[]
+     */
     @FillerMet
     public static int[] genSortedArrayWithX (final int length, final int minVal, final int maxVal){
         List<Integer> data = getSortedList(length - 1, minVal, maxVal);
@@ -40,6 +56,13 @@ public class Filler {
         return transferListToArray(data);
     }
 
+    /**
+     *Generate a reverse sorted array
+     * @param length the length of future array
+     * @param minVal the minimum limit of values element with array
+     * @param maxVal the maximum limit of values element with array
+     * @return int[]
+     */
     @FillerMet
     public static int[] genRevSortedArray (final int length, final int minVal, final int maxVal) {
         List<Integer> data = getSortedList(length, minVal, maxVal);
@@ -48,6 +71,13 @@ public class Filler {
         return transferListToArray(data);
     }
 
+    /**
+     *Generate array with random elements
+     * @param length the length of future array
+     * @param minVal the minimum limit of values element with array
+     * @param maxVal the maximum limit of values element with array
+     * @return int[]
+     */
     @FillerMet
     public static int[] genRandomArray(final int length, final int minVal, final int maxVal){
         List<Integer> data = new ArrayList<>(length);
@@ -77,6 +107,5 @@ public class Filler {
     private static int[] transferListToArray(List<Integer> data){
         return data.stream().mapToInt(i -> i).toArray();
     }
-
 
 }

@@ -8,6 +8,8 @@ package sorters.algorithms;
  * @author Pavlo Danyliuk
  *
  * @version 1.0
+ *
+ * @see Sorting
  */
 
 public class MergeSort extends Sorting {

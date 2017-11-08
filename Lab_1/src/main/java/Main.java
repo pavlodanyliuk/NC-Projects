@@ -4,6 +4,7 @@ import sorters.SortsContainer;
 import sorters.algorithms.Sorting;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,9 +15,10 @@ public class Main {
 //        SortsContainer.quickSort(arr);
 //        SortsContainer.shellSort(arr);
 //        SortsContainer.arraysSort(arr);
+//        SortsContainer.ordinarySort(arr);
 //
 
-//        int[] arr1 = annotations.Filler.genSortedArray(10,0,20);
+//        int[] arr1 = Filler.genSortedArray(10,0,20);
 //        int[] arr2 = annotations.Filler.genSortedArrayWithX(10,0,20);
 //        int[] arr3 = annotations.Filler.genRevSortedArray(10,0,20);
 //        int[] arr4 = annotations.Filler.genRandomArray(10,0,20);

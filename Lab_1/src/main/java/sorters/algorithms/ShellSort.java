@@ -1,13 +1,14 @@
 package sorters.algorithms;
 
 /**
- *
- * <b>Shell sort</b>
+ *<b>Shell sort</b>
  * <br>For sort an array, using the shell sort
  *
  * @author Pavlo Danyliuk
  *
  * @version 1.0
+ *
+ * @see Sorting
  */
 public class ShellSort extends Sorting {
 
