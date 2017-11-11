@@ -1,8 +1,10 @@
 import analyzer.Analyzer;
+import exel.ExelWriter;
 import fillers.Filler;
 import sorters.SortsContainer;
 import sorters.algorithms.Sorting;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -28,7 +30,12 @@ public class Main {
 //        printArray(arr3);
 //        printArray(arr4);
 
-        Analyzer.analyze();
+        File file = new File("/home/roland/exel/stats.xlsx");
+        new ExelWriter(Analyzer.analyze(), Analyzer.getLenOfArrays()).writeStats(file);
+
+
+
+
 //        Method meth = null;
 //        try {
 //            meth = Filler.class.getMethod("genRandomArray", int.class, int.class, int.class);

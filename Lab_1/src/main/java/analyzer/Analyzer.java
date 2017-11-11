@@ -50,14 +50,14 @@ public class Analyzer {
         //Get stats
         Map<Method, Map<Class<? extends Sorting>, long[]>> map = stats(genMethods, sortingTypes);
 
-//        for(Map.Entry<Method, Map<Class<? extends Sorting>, long[]>> n : map.entrySet()){
-//            System.out.println(n.getKey().getName() + ":");
-//            for(Map.Entry<Class<? extends Sorting>, long[]> m : n.getValue().entrySet()){
-//
-//                System.out.print(m.getKey().getSimpleName() + " : " + m.getValue()[0] + " " + m.getValue()[1] + " " + m.getValue()[2] + " " + m.getValue()[3] + "\n");
-//            }
-//            System.out.println("-------------");
-//        }
+        for(Map.Entry<Method, Map<Class<? extends Sorting>, long[]>> n : map.entrySet()){
+            System.out.println(n.getKey().getName() + ":");
+            for(Map.Entry<Class<? extends Sorting>, long[]> m : n.getValue().entrySet()){
+
+                System.out.print(m.getKey().getSimpleName() + " : " + m.getValue()[0] + " " + m.getValue()[1] + " " + m.getValue()[2] + " " + m.getValue()[3] + "\n");
+            }
+            System.out.println("-------------");
+        }
 
         return map;
     }
@@ -163,5 +163,9 @@ public class Analyzer {
                 iterator.remove();
             }
         }
+    }
+
+    public static int[] getLenOfArrays(){
+        return new int[]{ LEN10, LEN100, LEN1000, LEN10000 };
     }
 }

@@ -102,7 +102,7 @@ public abstract class Sorting {
      *
      * @return name of sorting
      */
-    public String getName() {
+    public static String getName() {
         return name;
     }
 
@@ -111,8 +111,8 @@ public abstract class Sorting {
      *
      * @param name will be set like name of sorting
      * */
-    public void setName(String name) {
-        this.name = name;
+    public static void setName(String name) {
+        Sorting.name = name;
     }
 
     /**
