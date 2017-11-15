@@ -1,5 +1,6 @@
 package exel;
 
+import fillers.Filler;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.charts.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -15,16 +16,39 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+
+/**
+ *<b>Class for print statistics about all sorting method with different generated arrays to exels file</b>
+ *
+ * @author Pavlo Danyliuk
+ * @version 1.0
+ * @see Filler
+ */
+
 public class ExelWriter {
     private final Map<Method, Map<Class<? extends Sorting>, long[]>> MAP;
     private final XSSFWorkbook WORKBOOK;
     private final int[] LENS_OF_SORTING_ARRAYS;
 
+
+    /**
+     * To set a map Object. Which contains of method of generating arrays,
+     * {@link Class Class} object of sorting method and time needed to sort the array
+     * @param map Map object
+     *
+     */
     public ExelWriter(Map<Method, Map<Class<? extends Sorting>, long[]>> map, int[] lenOfSortingArrays){
         this.MAP = map;
         WORKBOOK = new XSSFWorkbook();
         LENS_OF_SORTING_ARRAYS = lenOfSortingArrays;
     }
+
+
+    /**
+     * Writing received information to exel file
+     * @param file .xlsx file, where will be writing a received information
+     *
+     */
     public void writeStats(File file){
         if(!file.getName().endsWith(".xlsx")){
             System.out.println("Incorrect file format. Need to be \".xlsx\"");
