@@ -2,7 +2,7 @@ package sorters.algorithms;
 
 
 /**
- * Абстрактний клас, служить як батько для різних методів сортувань
+ * Parent for different methods of sorting
  *
  * @author Pavlo Danyliuk
  *
@@ -26,6 +26,13 @@ public abstract class Sorting {
      *
      */
     public Sorting (int[] array){
+
+        if(array == null){
+            len = 0;
+            this.array = new int[0];
+            return;
+        }
+
         len = array.length;
         this.array = new int[len];
         for(int i = 0; i < array.length; i++){
