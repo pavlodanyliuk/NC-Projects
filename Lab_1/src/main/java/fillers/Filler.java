@@ -37,7 +37,12 @@ public class Filler {
      * @return int[]
      */
     @FillerMet
-    public static int[] genSortedArray(final int length, final int minVal, final int maxVal) {
+    public static int[] genSortedArray(final int length, int minVal, int maxVal) {
+        if(length < 0) {
+            return new int[0];
+        }
+        if(minVal > maxVal) minVal = maxVal;
+
         return transferListToArray(getSortedList(length, minVal, maxVal));
     }
 
@@ -49,7 +54,12 @@ public class Filler {
      * @return int[]
      */
     @FillerMet
-    public static int[] genSortedArrayWithX (final int length, final int minVal, final int maxVal){
+    public static int[] genSortedArrayWithX (final int length, int minVal, int maxVal){
+        if(length < 0) {
+            return new int[0];
+        }
+        if(minVal > maxVal) minVal = maxVal;
+
         List<Integer> data = getSortedList(length - 1, minVal, maxVal);
         data.add(getRandomVal(minVal, maxVal));
 
@@ -64,7 +74,12 @@ public class Filler {
      * @return int[]
      */
     @FillerMet
-    public static int[] genRevSortedArray (final int length, final int minVal, final int maxVal) {
+    public static int[] genRevSortedArray (final int length, int minVal, int maxVal) {
+        if(length < 0) {
+            return new int[0];
+        }
+        if(minVal > maxVal) minVal = maxVal;
+
         List<Integer> data = getSortedList(length, minVal, maxVal);
         Collections.reverse(data);
 
@@ -79,7 +94,12 @@ public class Filler {
      * @return int[]
      */
     @FillerMet
-    public static int[] genRandomArray(final int length, final int minVal, final int maxVal){
+    public static int[] genRandomArray(final int length, int minVal, int maxVal){
+        if(length < 0) {
+            return new int[0];
+        }
+        if(minVal > maxVal) minVal = maxVal;
+
         List<Integer> data = new ArrayList<>(length);
 
         for (int i = 0; i < length; i++){
