@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="ABA34BC6-E3B2-26A2-7FC7-779921F561C2" schemaObject="D9B99466-9F69-0BBF-0A80-1AA6417EB355" name="objects">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>PAVLO</sourceObjSchema>
+<sourceObjName>objects</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="09A31E7B-4985-C054-0C4D-2C651F86AFBD">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>objects</sourceObjSchema>
+<sourceObjName>id</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>5</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,5,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="name" id="EA1F7989-C99A-9DF1-4084-4BBBAA29B310">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>objects</sourceObjSchema>
+<sourceObjName>name</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="type_id" id="BA5C6FAD-C819-8075-EC1D-6A4681467065">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>objects</sourceObjSchema>
+<sourceObjName>type_id</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>5</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,5,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="CD897B51-EAF2-9308-6590-6FFACD2A2CAA" referredColumn="BD2F4094-6CCB-B692-9928-2334661CD5A6"/>
+</associations>
+</Column>
+<Column name="parent_id" id="52707EBA-574C-8C25-488F-524B0034CBAA">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>objects</sourceObjSchema>
+<sourceObjName>parent_id</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>5</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,5,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="80285E77-3FB1-01E8-C7CF-6DE8C41ECF48" name="objects_id_pk">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>PAVLO</sourceObjSchema>
+<sourceObjName>objects_id_pk</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:18 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="09A31E7B-4985-C054-0C4D-2C651F86AFBD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3AEBD372-4467-2701-816F-0822540CA9C1" schemaObject="D9B99466-9F69-0BBF-0A80-1AA6417EB355" name="objects_id_pk">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>PAVLO</sourceObjSchema>
+<sourceObjName>objects_id_pk</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:18 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="09A31E7B-4985-C054-0C4D-2C651F86AFBD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BCA989E5-6E6D-0B67-2EE5-24C5B9A88DEC" name="types_typeId_fk">
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:18 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<nameHasQuotes>true</nameHasQuotes>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BA5C6FAD-C819-8075-EC1D-6A4681467065"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

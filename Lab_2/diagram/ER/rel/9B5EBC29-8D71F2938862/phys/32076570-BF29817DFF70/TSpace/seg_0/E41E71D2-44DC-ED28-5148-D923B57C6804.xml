@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableSpaceOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableSpaceOraclev10g" name="USERS" directorySegmentName="seg_0" id="E41E71D2-44DC-ED28-5148-D923B57C6804">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>PAVLO</sourceObjSchema>
+<sourceObjName>USERS</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:17 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<emUniformSize>0</emUniformSize>
+<extentManagement>LOCAL</extentManagement>
+</TableSpaceOraclev10g>

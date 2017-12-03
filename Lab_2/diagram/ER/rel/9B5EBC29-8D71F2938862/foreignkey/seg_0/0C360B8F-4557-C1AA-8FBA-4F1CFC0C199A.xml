@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="0C360B8F-4557-C1AA-8FBA-4F1CFC0C199A" containerWithKeyObject="7C031836-E677-972F-1524-4EB1936A9758" localFKIndex="37E1FE50-179E-1BEB-6DF1-387B4228CC9C" name="params_attrId_fk">
+<sourceConnName>metamodel</sourceConnName>
+<sourceObjSchema>PAVLO</sourceObjSchema>
+<sourceObjName>params_attrId_fk</sourceObjName>
+<createdBy>root</createdBy>
+<createdTime>2017-12-03 16:15:18 UTC</createdTime>
+<ownerDesignName>ER</ownerDesignName>
+<referredTableLongName>PAVLO.attributes</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>03B11400-4D18-12B7-8F8B-A5BAFB3ED4F5</referredTableID>
+<keyObject>81EE169B-7D6F-4172-3581-2EA5B29C3D3A</keyObject>
+<referredKeyID>81EE169B-7D6F-4172-3581-2EA5B29C3D3A</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
