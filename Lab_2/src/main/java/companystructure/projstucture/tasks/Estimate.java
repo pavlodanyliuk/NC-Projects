@@ -1,4 +1,4 @@
-package companystructure.projstucture;
+package companystructure.projstucture.tasks;
 
 public class Estimate {
     private int timeH; //in hour

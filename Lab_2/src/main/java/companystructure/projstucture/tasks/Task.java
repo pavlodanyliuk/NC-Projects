@@ -1,17 +1,22 @@
-package companystructure.projstucture;
+package companystructure.projstucture.tasks;
 
-import companystructure.Quality;
+import companystructure.peoplestructure.workers.Employee;
+import companystructure.peoplestructure.workers.Manager;
+import companystructure.peoplestructure.workers.Qualification;
+
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class Task {
     private Estimate estimateTimeH;
     private String name;
     private String description;
     private Date startDate = null;
+    private Date finishDate = null;
 
-    private Quality requirementsQuality = null;
+    private Qualification requirementsQuality = null;
 
     private ArrayList<Task> dependingTask;
     private ArrayList<Task> subTask;
@@ -19,36 +24,45 @@ public class Task {
     private boolean finished = false;
     private boolean started = false;
 
-    public void Task(String name, String description, Estimate estimateTimeH){
+    private HashSet<Employee> employees = null;
+
+    private Manager manager;
+
+    public Task(String name, String description, Estimate estimateTimeH, Manager manager){
         this.name = name;
         this.description = description;
         this.estimateTimeH = estimateTimeH;
+        this.manager = manager;
         dependingTask = new ArrayList<Task>(0);
         subTask = new ArrayList<Task>(0);
+
     }
 
-    public void Task(String name, String description, Estimate estimateTimeH, ArrayList<Task> dependingTask){
+    public Task(String name, String description, Estimate estimateTimeH, ArrayList<Task> dependingTask, Manager manager){
         this.name = name;
         this.description = description;
         this.estimateTimeH = estimateTimeH;
         this.dependingTask = dependingTask;
+        this.manager = manager;
         subTask = new ArrayList<Task>(0);
     }
 
-    public void Task(String name, String description, ArrayList<Task> subTask, Estimate estimateTimeH ){
+    public Task(String name, String description, ArrayList<Task> subTask, Estimate estimateTimeH, Manager manager ){
         this.name = name;
         this.description = description;
         this.estimateTimeH = estimateTimeH;
         this.subTask = subTask;
+        this.manager = manager;
         dependingTask = new ArrayList<Task>(0);
     }
 
-    public void Task(String name, String description, Estimate estimateTimeH, ArrayList<Task> dependingTask, ArrayList<Task> subTask){
+    public Task(String name, String description, Estimate estimateTimeH, ArrayList<Task> dependingTask, ArrayList<Task> subTask, Manager manager){
         this.name = name;
         this.description = description;
         this.estimateTimeH = estimateTimeH;
         this.dependingTask = dependingTask;
         this.subTask = subTask;
+        this.manager = manager;
     }
 
     public boolean isFinished(){
@@ -58,6 +72,7 @@ public class Task {
     public void completeTask(){
         if(!isStarted()){
             System.out.println("You need to start task, and after finish it!");
+            return;
         }
         for(Task subT : subTask){
             if(!subT.isFinished()){
@@ -66,6 +81,7 @@ public class Task {
             }
         }
 
+        finishDate = new Date();
         finished = true;
     }
 
@@ -94,6 +110,10 @@ public class Task {
             return;
         }
         dependingTask.add(task);
+    }
+
+    public void joinTheEmployee(Employee employee){
+        employees.add(employee);
     }
 
     public Date getStartDate() {
@@ -128,11 +148,27 @@ public class Task {
         return started;
     }
 
-    public void setRequirementsQuality(Quality requirementsQuality) {
+    public void setRequirementsQualification(Qualification requirementsQuality) {
         this.requirementsQuality = requirementsQuality;
     }
 
-    public Quality getRequirementsQuality() {
+    public Qualification getRequirementsQualification() {
         return requirementsQuality;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void changeStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void changeManager(Manager manager) {
+        this.manager = manager;
+    }
+
+    public Manager getManager() {
+        return manager;
     }
 }
