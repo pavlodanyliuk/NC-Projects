@@ -1,22 +1,29 @@
 package dao.daojdbc;
 
 import dao.daointerfaces.DepartmentDAO;
-import executor.Executor;
-import executor.ResultHandler;
+
+
 import jdbcutil.DBUtil;
 import offices.Department;
-import offices.generator.GeneratorId;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.List;
 
-public class DepartmentDaoJDBC implements DepartmentDAO {
-    private final Executor executor;
+import java.util.Map;
+
+public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
+    private String deptId;
 
     public DepartmentDaoJDBC( Connection connection){
-        executor = new Executor(connection);
+        super (connection);
+
+        try {
+            deptId = isTypesExistInTable(Department.class.getCanonicalName());
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
     }
 
     public List<Department> getAllDepartments() {
@@ -36,42 +43,35 @@ public class DepartmentDaoJDBC implements DepartmentDAO {
     }
 
     public void addDepartment(Department department) {
+        addObject(department.getId(), department);
+    }
 
-        try {
-            if (isDepartmentExistInTable() == null){
-                insertInTypes(department);
-            }
-            else{
-                System.out.println("Department exists");
-            }
+    protected void addLogic(Object obj) throws SQLException {
+        Department department = (Department)obj;
 
-        } catch (SQLException e) {
-            DBUtil.showErrorMessage(e);
+        //if Class is in Types, this means that class attributes are in Attributes
+        if (deptId == null){
+            deptId = insertInTypesAndAttributes(Department.class);
         }
 
-    }
+        insertIntoObjects(department.getId(), deptId);
 
-    private void insertInTypes(Department department) throws SQLException {
-        int row;
-        String insert = String.format("INSERT INTO TYPES (ID, NAME) VALUES ('%s', '%s')",
-                GeneratorId.generateUniqId(), department.getClass().getCanonicalName());
+        insertAllIntoParams(department);
 
-        row = executor.execUpdate(insert);
-
-        System.out.println(row + " updated...");
 
     }
 
-    private String isDepartmentExistInTable() throws SQLException{
-        String query = String.format("SELECT TYPES.ID, TYPES.NAME FROM TYPES WHERE TYPES.NAME='%s'", Department.class.getCanonicalName());
-        String id = executor.execQuery(
-                query,
-                resultSet -> {
-                    if(!resultSet.next()) return null;
-                    return resultSet.getString("ID");
-                });
+    private void insertAllIntoParams(Department department) throws SQLException{
+        Map<String, String> map = getAttrIds(deptId);
 
-        return id;
+        insertIntoParams(department.getName(), map.get("name"), department.getId(), false);
+
+        //if Office object doesnt exist in table OBJECTS, then add the object
+//        if(!isObjectExistInTable(department.getOffice().getId())){
+//            new OfficeDaoJDBC(connection).addOffice(department.getOffice());
+//        }
+//        insertIntoParams(department.getOffice().getId(), map.get("office"), department.getId(), true);
     }
+
 
 }
