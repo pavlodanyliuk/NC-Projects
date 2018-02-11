@@ -2,7 +2,7 @@ package offices;
 
 import offices.generator.GeneratorId;
 
-public class Department {
+public class Department implements Identificateble{
 
     private final String id;
     private String name;
@@ -12,6 +12,12 @@ public class Department {
         this.name = name;
         this.office = office;
         this.id = GeneratorId.generateUniqId();
+    }
+
+    public Department(String name, Office office, String id){
+        this.name = name;
+        this.office = office;
+        this.id = id;
     }
 
     public String getName() {

@@ -2,7 +2,7 @@ package offices;
 
 import offices.generator.GeneratorId;
 
-public class Company {
+public class Company implements Identificateble {
     private final String id;
     private String name;
     private String director;

@@ -2,7 +2,7 @@ package offices;
 
 import offices.generator.GeneratorId;
 
-public class Location {
+public class Location implements Identificateble{
     private final String id;
     private String country;
     private String region;

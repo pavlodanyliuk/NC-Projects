@@ -36,7 +36,7 @@ public class Main {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
 
             DepartmentDaoJDBC departmentDaoJDBC = new DepartmentDaoJDBC(connection);
-            departmentDaoJDBC.addDepartment(deptDevGB);
+            departmentDaoJDBC.addDepartment(deptDevUA);
 
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);

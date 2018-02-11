@@ -1,9 +1,6 @@
 package executor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Executor {
     private final Connection connection;
@@ -12,18 +9,21 @@ public class Executor {
         this.connection = connection;
     }
 
-    public int execUpdate(String update) throws SQLException{
-        Statement stmt = connection.createStatement();
-        stmt.execute(update);
-        int value = stmt.getUpdateCount();
+    public int execUpdate(String update, PreparedStatementHandler handler) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(update);
+        handler.descript(stmt);
+
+        int value = stmt.executeUpdate();
 
         stmt.close();
         return value;
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(query);
+    public <T> T execQuery(String query, ResultHandler<T> handler, PreparedStatementHandler handStm) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement(query);
+        handStm.descript(stmt);
+
+        stmt.executeQuery();
 
         ResultSet resultSet = stmt.getResultSet();
 

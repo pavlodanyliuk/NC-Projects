@@ -2,7 +2,7 @@ package offices;
 
 import offices.generator.GeneratorId;
 
-public class Employee extends People {
+public class Employee extends People implements Identificateble {
     private final String id;
     private Department department;
 
