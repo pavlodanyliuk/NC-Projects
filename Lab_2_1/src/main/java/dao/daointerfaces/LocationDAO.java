@@ -14,5 +14,5 @@ public interface LocationDAO {
 
     void deleteLocation(String id);
 
-    void addLocation(Location office);
+    void addLocation(Location location);
 }
