@@ -8,7 +8,7 @@ public interface EmployeeDAO {
 
     List<Employee> getAllEmployes();
 
-    Employee getEmployee(int id);
+    Employee getEmployee(String id);
 
     void updateEmployee(Employee employee);
 

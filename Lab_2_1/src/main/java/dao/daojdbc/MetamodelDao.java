@@ -10,11 +10,8 @@ import offices.generator.GeneratorId;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public abstract class MetamodelDao {
     protected final Connection connection;
@@ -34,6 +31,55 @@ public abstract class MetamodelDao {
 
     /**
      * Mains methods
+     */
+
+    /**
+     * Get methods (construct)
+     */
+
+    protected Identificateble getObject(String id){
+        Identificateble obj = null;
+        try {
+            connection.setAutoCommit(false);
+
+            if(!isObjectExistInTable(id)) return null;
+            if(!getObjectsType(id).equals(typesId)) return null;
+
+            Map<String, String> attrIds = getAttrIds(typesId);
+            Map<String, String> params = getParams(attrIds, id);
+
+            obj = getConstructedObject(params, id);
+
+            if (isCommit) connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                DBUtil.showErrorMessage(e1);
+            }
+        } finally {
+            if(isCommit) {
+                try {
+                    if(isCommit) connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    DBUtil.showErrorMessage(e);
+                }
+            }
+        }
+
+        return obj;
+    }
+
+    protected abstract Identificateble getConstructedObject(Map<String, String> map, String id);
+
+
+    /**
+     *Add methods
      */
 
     protected void addObject(Identificateble obj, Class clazz){
@@ -86,6 +132,7 @@ public abstract class MetamodelDao {
      *
      */
 
+
     protected String isTypesExistInTable(String canonicalName) throws SQLException {
         String query = "SELECT TYPES.ID, TYPES.NAME FROM TYPES WHERE TYPES.NAME=?";
 
@@ -112,6 +159,19 @@ public abstract class MetamodelDao {
         );
     }
 
+    protected String getObjectsType(String objId) throws SQLException {
+        String query = "SELECT * FROM OBJECTS WHERE OBJECTS.ID=?";
+
+        return executor.execQuery(
+                query,
+                resultSet -> {
+                    if(!resultSet.next()) return null;
+                    return resultSet.getString("TYPE_ID");
+                },
+                stmt -> stmt.setString(1, objId)
+        );
+    }
+
     protected void insertInTypesAndAttributes(Class clazz) throws SQLException {
         //insert in Types
         String insert = "INSERT INTO TYPES (ID, NAME) VALUES (?, ?)";
@@ -132,7 +192,13 @@ public abstract class MetamodelDao {
 
         List<String> fields = new ArrayList<>();
         for (Field field : clazz.getDeclaredFields()) {
+            if(field.getName().equals("id")) continue;
             fields.add(field.getName());
+        }
+
+        Class superClazz = clazz.getSuperclass();
+        for (Field field : superClazz.getDeclaredFields()){
+            fields.add((field.getName()));
         }
 
         row = 0;
@@ -239,6 +305,42 @@ public abstract class MetamodelDao {
                 },
                 stmt -> stmt.setString(1, typeId)
         );
+    }
+
+    protected Map<String, String> getParams (Map<String, String> attr, String objId) throws SQLException{
+        String find = "SELECT * FROM PARAMS WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        Map<String, String> params = new HashMap<>();
+        for(Map.Entry<String, String> param : attr.entrySet()) {
+            String attrId = param.getValue();
+            String value = executor.execQuery(
+                    find,
+                    resultSet -> {
+                        resultSet.next();
+                        String valueStr;
+
+                        valueStr = resultSet.getString("TEXT_VALUE");
+                        if(!resultSet.wasNull()) return valueStr;
+
+                        valueStr = resultSet.getString("REFERENCE_VALUE");
+                        if(!resultSet.wasNull()) return valueStr;
+
+                        Long valueNum = resultSet.getLong("NUMBER_VALUE");
+                        if(!resultSet.wasNull()) return valueNum.toString();
+
+                        Date valueDate = resultSet.getDate("DATA_VALUE");
+                        if(!resultSet.wasNull()) return valueDate.toString();
+
+                        return null;
+                    },
+                    stmt -> {
+                        stmt.setString(1, attrId);
+                        stmt.setString(2, objId);
+                    }
+            );
+            params.put(param.getKey(), value);
+        }
+        return params;
     }
 
     protected void setCommit(boolean commit) {

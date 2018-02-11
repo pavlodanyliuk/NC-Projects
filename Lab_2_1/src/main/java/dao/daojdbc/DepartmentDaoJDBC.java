@@ -6,6 +6,7 @@ import dao.daointerfaces.DepartmentDAO;
 import jdbcutil.DBUtil;
 import offices.Department;
 import offices.Identificateble;
+import offices.Office;
 
 import java.sql.Connection;
 
@@ -36,12 +37,20 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
         }
     }
 
+
+
     public List<Department> getAllDepartments() {
         return null;
     }
 
-    public Department getDepartment(int id) {
-        return null;
+    public Department getDepartment(String id) {
+        return (Department)getObject(id);
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> params, String id) {
+        String name = params.get("name");
+        return new Department(name, new OfficeDaoJDBC(connection, false).getOffice(params.get("office")), id);
     }
 
     public void updateDepartment(Department department) {

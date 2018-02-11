@@ -7,7 +7,7 @@ public interface DepartmentDAO {
 
     List<Department> getAllDepartments();
 
-    Department getDepartment(int id);
+    Department getDepartment(String id);
 
     void updateDepartment(Department department);
 

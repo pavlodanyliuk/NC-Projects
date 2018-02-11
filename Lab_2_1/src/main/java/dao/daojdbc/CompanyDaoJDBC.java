@@ -32,6 +32,8 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
         }
     }
 
+
+
     @Override
     public List<Company> getAllCompanies() {
         return null;
@@ -39,7 +41,12 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public Company getCompany(String id) {
-        return null;
+        return (Company)getObject(id);
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Company(map.get("name"), map.get("director"), id);
     }
 
     @Override

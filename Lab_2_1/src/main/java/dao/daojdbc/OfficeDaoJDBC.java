@@ -35,7 +35,6 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
     }
 
 
-
     @Override
     public List<Office> getAllOffices() {
         return null;
@@ -43,7 +42,16 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public Office getOffice(String id) {
-        return null;
+        return (Office)getObject(id);
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Office(
+                new CompanyDaoJDBC(connection, false).getCompany(map.get("company")),
+                new LocationDaoJDBC(connection, false).getLocation(map.get("location")),
+                id
+                );
     }
 
     @Override

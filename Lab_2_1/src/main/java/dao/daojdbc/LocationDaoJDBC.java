@@ -33,6 +33,8 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
         }
     }
 
+
+
     @Override
     public List<Location> getAllLocations() {
         return null;
@@ -40,7 +42,12 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public Location getLocation(String id) {
-        return null;
+        return (Location)getObject(id);
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Location(map.get("country"), map.get("region"), map.get("index"), map.get("address"), id);
     }
 
     @Override
