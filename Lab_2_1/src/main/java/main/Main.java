@@ -1,6 +1,7 @@
 package main;
 
 import dao.daojdbc.DepartmentDaoJDBC;
+import dao.daojdbc.EmployeeDaoJDBC;
 import jdbcutil.DBType;
 import jdbcutil.DBUtil;
 import offices.*;
@@ -35,8 +36,22 @@ public class Main {
         try {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
 
-            DepartmentDaoJDBC departmentDaoJDBC = new DepartmentDaoJDBC(connection);
-            departmentDaoJDBC.addDepartment(deptDevUA);
+            EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
+            employeeDaoJDBC.addEmployee(vasya);
+
+            Employee employee = employeeDaoJDBC.getEmployee(vasya.getId());
+            Department department = employee.getDepartment();
+
+            System.out.println(employee.getId()+":"+employee.getFirstName()+":"+employee.getLastName()+":"+employee.getAge()+":"+employee.getAddress());
+
+            System.out.println(department.getId()+":"+department.getName());
+            System.out.println(department.getOffice().getId());
+            Company cmp = department.getOffice().getCompany();
+            System.out.println(cmp.getId() + ":" + cmp.getName() + ":" + cmp.getDirector());
+            Location loc = department.getOffice().getLocation();
+            System.out.println(loc.getId()+":" +loc.getAddress() + ":" +loc.getCountry()+":"+loc.getIndex()+":"+loc.getRegion());
+
+
 
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);

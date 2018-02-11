@@ -14,6 +14,12 @@ public class Office implements Identificateble{
         this.id = GeneratorId.generateUniqId();
     }
 
+    public Office (Company company, Location location, String id){
+        this.company = company;
+        this.location = location;
+        this.id = id;
+    }
+
     public Company getCompany() {
         return company;
     }

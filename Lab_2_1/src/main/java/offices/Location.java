@@ -17,6 +17,14 @@ public class Location implements Identificateble{
         this.id = GeneratorId.generateUniqId();
     }
 
+    public Location(String country, String region, String index, String address, String id) {
+        this.country = country;
+        this.region = region;
+        this.index = index;
+        this.address = address;
+        this.id = id;
+    }
+
     public String getCountry() {
         return country;
     }

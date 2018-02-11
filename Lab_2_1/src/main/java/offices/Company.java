@@ -13,6 +13,12 @@ public class Company implements Identificateble {
         this.id = GeneratorId.generateUniqId();
     }
 
+    public Company(String name, String director, String id) {
+        this.name = name;
+        this.director = director;
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

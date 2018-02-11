@@ -14,6 +14,13 @@ public class Employee extends People implements Identificateble {
         this.id = GeneratorId.generateUniqId();
     }
 
+    public Employee(String firstName, String lastName, Integer age, String address, Department department, String id) {
+        super(firstName, lastName, age, address);
+
+        this.department = department;
+        this.id = id;
+    }
+
     public Department getDepartment() {
         return department;
     }
