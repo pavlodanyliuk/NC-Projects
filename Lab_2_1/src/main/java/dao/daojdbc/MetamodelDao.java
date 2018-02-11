@@ -4,6 +4,7 @@ package dao.daojdbc;
 import executor.Executor;
 
 import jdbcutil.DBUtil;
+import offices.Identificateble;
 import offices.generator.GeneratorId;
 
 import java.lang.reflect.Field;
@@ -18,30 +19,48 @@ import java.util.Map;
 public abstract class MetamodelDao {
     protected final Connection connection;
     protected final Executor executor;
+    protected String typesId;
+    protected boolean isCommit = true;
 
     protected MetamodelDao(Connection connection) {
         this.connection = connection;
         this.executor = new Executor(connection);
+    }
+    protected MetamodelDao(Connection connection, boolean isCommit) {
+        this.connection = connection;
+        this.executor = new Executor(connection);
+        this.isCommit = isCommit;
     }
 
     /**
      * Mains methods
      */
 
-    protected void addObject(String objectId, Object obj){
+    protected void addObject(Identificateble obj, Class clazz){
         try {
             connection.setAutoCommit(false);
 
-            if(isObjectExistInTable(objectId)){
+            if(isObjectExistInTable(obj.getId())){
                 System.out.println("Object already exists in Data Base");
                 return;
             }
 
-            addLogic(obj);
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+            if(typesId == null){
+                insertInTypesAndAttributes(clazz);
+            }
 
-            connection.commit();
+            //insert into OBJECT table
+            insertIntoObjects(obj.getId());
+
+            //insert into PARAMS table
+            insertAllIntoParams(obj);
+            if(isCommit){
+                connection.commit();
+            }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             DBUtil.showErrorMessage(e);
             try {
                 connection.rollback();
@@ -50,22 +69,21 @@ public abstract class MetamodelDao {
             }
         } finally {
             try {
-                connection.setAutoCommit(true);
+                if(isCommit){
+                connection.setAutoCommit(true);}
             } catch (SQLException e) {
                 DBUtil.showErrorMessage(e);
             }
         }
     }
 
-    protected abstract void addLogic(Object obj) throws SQLException;
+    protected abstract void insertAllIntoParams(Identificateble obj) throws SQLException;
 
 
 
     /**
      * Utils methods
-     * @param canonicalName
-     * @return
-     * @throws SQLException
+     *
      */
 
     protected String isTypesExistInTable(String canonicalName) throws SQLException {
@@ -94,9 +112,8 @@ public abstract class MetamodelDao {
         );
     }
 
-    protected String insertInTypesAndAttributes(Class clazz) throws SQLException {
+    protected void insertInTypesAndAttributes(Class clazz) throws SQLException {
         //insert in Types
-        String typesId;
         String insert = "INSERT INTO TYPES (ID, NAME) VALUES (?, ?)";
 
         typesId = GeneratorId.generateUniqId();
@@ -132,11 +149,9 @@ public abstract class MetamodelDao {
 
         System.out.println(row + " updated...(ATTRIBUTES)");
 
-        return typesId;
-
     }
 
-    protected void insertIntoObjects(String objId, String typesId) throws SQLException{
+    protected void insertIntoObjects(String objId) throws SQLException{
         String insert = "INSERT INTO OBJECTS (ID, TYPE_ID) VALUES (?, ?)";
 
         int row = executor.execUpdate(
@@ -226,6 +241,7 @@ public abstract class MetamodelDao {
         );
     }
 
-
-
+    protected void setCommit(boolean commit) {
+        isCommit = commit;
+    }
 }
