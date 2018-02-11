@@ -3,28 +3,33 @@ package dao.daojdbc;
 import dao.daointerfaces.CompanyDAO;
 import jdbcutil.DBUtil;
 import offices.Company;
+import offices.Identificateble;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
-
-    private String companyID;
 
     public CompanyDaoJDBC(Connection connection) {
         super(connection);
 
         try {
-            companyID = isTypesExistInTable(Company.class.getCanonicalName());
+            typesId = isTypesExistInTable(Company.class.getCanonicalName());
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
     }
 
-    @Override
-    protected void addLogic(Object obj) throws SQLException {
+    public CompanyDaoJDBC(Connection connection, boolean withCommit) {
+        super(connection, withCommit);
 
+        try {
+            typesId = isTypesExistInTable(Company.class.getCanonicalName());
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
     }
 
     @Override
@@ -49,6 +54,17 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void addCompany(Company company) {
-
+        addObject(company, Company.class);
     }
+
+    @Override
+    protected void insertAllIntoParams(Identificateble obj) throws SQLException {
+        Company company = (Company)obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        insertIntoParams(company.getDirector(), map.get("director"), company.getId(),false );
+        insertIntoParams(company.getName(), map.get("name"), company.getId(), false);
+    }
+
 }

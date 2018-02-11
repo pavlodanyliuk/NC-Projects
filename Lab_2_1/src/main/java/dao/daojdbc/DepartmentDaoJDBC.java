@@ -5,6 +5,7 @@ import dao.daointerfaces.DepartmentDAO;
 
 import jdbcutil.DBUtil;
 import offices.Department;
+import offices.Identificateble;
 
 import java.sql.Connection;
 
@@ -14,13 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
-    private String deptId;
 
     public DepartmentDaoJDBC( Connection connection){
         super (connection);
 
         try {
-            deptId = isTypesExistInTable(Department.class.getCanonicalName());
+            typesId = isTypesExistInTable(Department.class.getCanonicalName());
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    public DepartmentDaoJDBC( Connection connection, boolean withCommit){
+        super (connection, withCommit);
+
+        try {
+            typesId = isTypesExistInTable(Department.class.getCanonicalName());
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -43,34 +53,21 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
     }
 
     public void addDepartment(Department department) {
-        addObject(department.getId(), department);
+        addObject(department, Department.class);
     }
 
-    protected void addLogic(Object obj) throws SQLException {
+    protected void insertAllIntoParams(Identificateble obj) throws SQLException{
         Department department = (Department)obj;
 
-        //if Class is in Types, this means that class attributes are in Attributes
-        if (deptId == null){
-            deptId = insertInTypesAndAttributes(Department.class);
-        }
-
-        insertIntoObjects(department.getId(), deptId);
-
-        insertAllIntoParams(department);
-
-
-    }
-
-    private void insertAllIntoParams(Department department) throws SQLException{
-        Map<String, String> map = getAttrIds(deptId);
+        Map<String, String> map = getAttrIds(typesId);
 
         insertIntoParams(department.getName(), map.get("name"), department.getId(), false);
 
         //if Office object doesnt exist in table OBJECTS, then add the object
-//        if(!isObjectExistInTable(department.getOffice().getId())){
-//            new OfficeDaoJDBC(connection).addOffice(department.getOffice());
-//        }
-//        insertIntoParams(department.getOffice().getId(), map.get("office"), department.getId(), true);
+        if(!isObjectExistInTable(department.getOffice().getId())){
+            new OfficeDaoJDBC(connection, false).addOffice(department.getOffice());
+        }
+        insertIntoParams(department.getOffice().getId(), map.get("office"), department.getId(), true);
     }
 
 
