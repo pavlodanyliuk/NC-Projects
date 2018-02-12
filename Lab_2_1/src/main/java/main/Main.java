@@ -9,6 +9,7 @@ import offices.generator.GeneratorId;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
 
@@ -38,19 +39,25 @@ public class Main {
 
             EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
             employeeDaoJDBC.addEmployee(vasya);
+            employeeDaoJDBC.addEmployee(kolya);
+            employeeDaoJDBC.addEmployee(evgen);
+            employeeDaoJDBC.addEmployee(herley);
+            employeeDaoJDBC.addEmployee(roland);
 
-            Employee employee = employeeDaoJDBC.getEmployee(vasya.getId());
-            Department department = employee.getDepartment();
+            List<Employee> employees = employeeDaoJDBC.getAllEmployes();
 
-            System.out.println(employee.getId()+":"+employee.getFirstName()+":"+employee.getLastName()+":"+employee.getAge()+":"+employee.getAddress());
+            for(Employee employee : employees) {
+                Department department = employee.getDepartment();
 
-            System.out.println(department.getId()+":"+department.getName());
-            System.out.println(department.getOffice().getId());
-            Company cmp = department.getOffice().getCompany();
-            System.out.println(cmp.getId() + ":" + cmp.getName() + ":" + cmp.getDirector());
-            Location loc = department.getOffice().getLocation();
-            System.out.println(loc.getId()+":" +loc.getAddress() + ":" +loc.getCountry()+":"+loc.getIndex()+":"+loc.getRegion());
+                System.out.println(employee.getId() + ":" + employee.getFirstName() + ":" + employee.getLastName() + ":" + employee.getAge() + ":" + employee.getAddress());
 
+                System.out.println(department.getId() + ":" + department.getName());
+                System.out.println(department.getOffice().getId());
+                Company cmp = department.getOffice().getCompany();
+                System.out.println(cmp.getId() + ":" + cmp.getName() + ":" + cmp.getDirector());
+                Location loc = department.getOffice().getLocation();
+                System.out.println(loc.getId() + ":" + loc.getAddress() + ":" + loc.getCountry() + ":" + loc.getIndex() + ":" + loc.getRegion());
+            }
 
 
         } catch (SQLException e) {
