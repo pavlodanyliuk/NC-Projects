@@ -343,6 +343,27 @@ public abstract class MetamodelDao {
         return params;
     }
 
+    protected List<String> getAllObjectsForType() throws SQLException{
+        ArrayList<String> objectIds;
+
+        String querry = "SELECT * FROM OBJECTS WHERE TYPE_ID=?";
+        objectIds = executor.execQuery(
+                querry,
+                resultSet -> {
+                    ArrayList<String> ids = new ArrayList<>();
+                    while(resultSet.next()){
+                        ids.add(resultSet.getString("ID"));
+                    }
+                    return ids;
+                },
+                stmt -> {
+                    stmt.setString(1, typesId);
+                }
+        );
+
+        return objectIds;
+    }
+
     protected void setCommit(boolean commit) {
         isCommit = commit;
     }
