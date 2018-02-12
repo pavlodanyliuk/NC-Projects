@@ -7,6 +7,7 @@ import offices.Identificateble;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,21 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public List<Company> getAllCompanies() {
-        return null;
+        if(typesId == null) return null;
+
+        List<String> objects = null;
+        try {
+            objects = getAllObjectsForType();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+
+        ArrayList<Company> companies = new ArrayList<>();
+
+        for(String id : objects) companies.add(getCompany(id));
+
+        return companies;
     }
 
     @Override

@@ -7,6 +7,7 @@ import offices.Identificateble;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,22 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
     }
 
     public List<Employee> getAllEmployes() {
-        return null;
+
+        if(typesId == null) return null;
+
+        List<String> objects = null;
+        try {
+            objects = getAllObjectsForType();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        for(String id : objects) employees.add(getEmployee(id));
+
+        return employees;
     }
 
     @Override

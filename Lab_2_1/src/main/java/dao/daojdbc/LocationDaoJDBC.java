@@ -7,6 +7,7 @@ import offices.Location;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,22 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public List<Location> getAllLocations() {
-        return null;
+
+        if(typesId == null) return null;
+
+        List<String> objects = null;
+        try {
+            objects = getAllObjectsForType();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+
+        ArrayList<Location> locations = new ArrayList<>();
+
+        for(String id : objects) locations.add(getLocation(id));
+
+        return locations;
     }
 
     @Override

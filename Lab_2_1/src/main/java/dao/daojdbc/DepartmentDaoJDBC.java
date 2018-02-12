@@ -11,6 +11,7 @@ import offices.Office;
 import java.sql.Connection;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
@@ -40,7 +41,21 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
 
     public List<Department> getAllDepartments() {
-        return null;
+        if(typesId == null) return null;
+
+        List<String> objects = null;
+        try {
+             objects = getAllObjectsForType();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+
+        ArrayList<Department> departments = new ArrayList<>();
+
+        for(String id : objects) departments.add(getDepartment(id));
+
+        return departments;
     }
 
     public Department getDepartment(String id) {
