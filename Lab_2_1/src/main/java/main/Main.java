@@ -38,32 +38,42 @@ public class Main {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
 
             EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
-            employeeDaoJDBC.addEmployee(vasya);
             employeeDaoJDBC.addEmployee(kolya);
-            employeeDaoJDBC.addEmployee(evgen);
-            employeeDaoJDBC.addEmployee(herley);
-            employeeDaoJDBC.addEmployee(roland);
 
-            List<Employee> employees = employeeDaoJDBC.getAllEmployes();
+            printInfo(kolya);
 
-            for(Employee employee : employees) {
-                Department department = employee.getDepartment();
+            kolya.setAddress("dkfjdkjfkdjfdkjkfjkfjf");
+            kolya.setAge(6565);
+            kolya.setFirstName("natasha");
+            kolya.setLastName("volkova");
+            kolya.setDepartment(deptDevGB);
 
-                System.out.println(employee.getId() + ":" + employee.getFirstName() + ":" + employee.getLastName() + ":" + employee.getAge() + ":" + employee.getAddress());
+            printInfo(kolya);
 
-                System.out.println(department.getId() + ":" + department.getName());
-                System.out.println(department.getOffice().getId());
-                Company cmp = department.getOffice().getCompany();
-                System.out.println(cmp.getId() + ":" + cmp.getName() + ":" + cmp.getDirector());
-                Location loc = department.getOffice().getLocation();
-                System.out.println(loc.getId() + ":" + loc.getAddress() + ":" + loc.getCountry() + ":" + loc.getIndex() + ":" + loc.getRegion());
-            }
+            employeeDaoJDBC.updateEmployee(kolya);
+
+
+
 
 
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
 
+
+    }
+
+    public static void printInfo(Employee employee){
+        Department department = employee.getDepartment();
+
+        System.out.println(employee.getId() + ":" + employee.getFirstName() + ":" + employee.getLastName() + ":" + employee.getAge() + ":" + employee.getAddress());
+
+        System.out.println(department.getId() + ":" + department.getName());
+        System.out.println(department.getOffice().getId());
+        Company cmp = department.getOffice().getCompany();
+        System.out.println(cmp.getId() + ":" + cmp.getName() + ":" + cmp.getDirector());
+        Location loc = department.getOffice().getLocation();
+        System.out.println(loc.getId() + ":" + loc.getAddress() + ":" + loc.getCountry() + ":" + loc.getIndex() + ":" + loc.getRegion());
 
     }
 }

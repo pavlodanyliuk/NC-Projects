@@ -1,5 +1,6 @@
 package dao.daointerfaces;
 
+import offices.Location;
 import offices.Office;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface OfficeDAO {
 
     Office getOffice(String id);
 
-    void updateOffice(String id);
+    void updateOffice(Office office);
 
     void deleteOffice(String id);
 

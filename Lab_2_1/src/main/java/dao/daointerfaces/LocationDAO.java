@@ -10,7 +10,7 @@ public interface LocationDAO {
 
     Location getLocation(String id);
 
-    void updateLocation(String id);
+    void updateLocation(Location location);
 
     void deleteLocation(String id);
 
