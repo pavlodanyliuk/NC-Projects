@@ -38,22 +38,7 @@ public class Main {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
 
             EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
-            employeeDaoJDBC.addEmployee(kolya);
-
-            printInfo(kolya);
-
-            kolya.setAddress("dkfjdkjfkdjfdkjkfjkfjf");
-            kolya.setAge(6565);
-            kolya.setFirstName("natasha");
-            kolya.setLastName("volkova");
-            kolya.setDepartment(deptDevGB);
-
-            printInfo(kolya);
-
-            employeeDaoJDBC.updateEmployee(kolya);
-
-
-
+            employeeDaoJDBC.deleteEmployee("16190D933BD");
 
 
         } catch (SQLException e) {
