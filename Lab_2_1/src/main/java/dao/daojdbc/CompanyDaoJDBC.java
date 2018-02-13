@@ -66,7 +66,7 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void deleteCompany(String id) {
-
+        deleteObject(id);
     }
 
     @Override

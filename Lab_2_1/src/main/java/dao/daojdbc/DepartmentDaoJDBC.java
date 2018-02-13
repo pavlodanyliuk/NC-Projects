@@ -68,7 +68,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
     }
 
     public void deleteDepartment(String id) {
-
+        deleteObject(id);
     }
 
     public void addDepartment(Department department) {

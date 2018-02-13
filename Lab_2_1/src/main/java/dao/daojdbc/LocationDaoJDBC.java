@@ -73,7 +73,7 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public void deleteLocation(String id) {
-
+        deleteObject(id);
     }
 
     @Override

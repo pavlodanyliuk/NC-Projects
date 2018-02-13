@@ -53,23 +53,9 @@ public abstract class MetamodelDao {
             if (isCommit) connection.commit();
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            DBUtil.showErrorMessage(e);
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-                DBUtil.showErrorMessage(e1);
-            }
+            catchLogic(e);
         } finally {
-            if(isCommit) {
-                try {
-                    if(isCommit) connection.setAutoCommit(true);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    DBUtil.showErrorMessage(e);
-                }
-            }
+            setAutoCommit();
         }
 
         return obj;
@@ -106,22 +92,15 @@ public abstract class MetamodelDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            DBUtil.showErrorMessage(e);
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                DBUtil.showErrorMessage(e1);
-            }
+           catchLogic(e);
         } finally {
-            try {
-                if(isCommit){
-                connection.setAutoCommit(true);}
-            } catch (SQLException e) {
-                DBUtil.showErrorMessage(e);
-            }
+            setAutoCommit();
         }
     }
+
+    /**
+     *Update method
+     */
 
     protected void updateObject(Identificateble obj, Class clazz){
         try {
@@ -135,27 +114,72 @@ public abstract class MetamodelDao {
 
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
-            DBUtil.showErrorMessage(e);
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-                DBUtil.showErrorMessage(e1);
-            }
+            catchLogic(e);
         } finally {
-            if (isCommit) {
-                try {
-                    connection.setAutoCommit(true);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    DBUtil.showErrorMessage(e);
-                }
+            setAutoCommit();
+        }
+    }
+
+    /**
+     * Delete method
+     */
+
+    public void deleteObject(String objId){
+        try{
+            connection.setAutoCommit(false);
+
+            if(!isObjectExistInTable(objId)){
+                System.out.println("There is no objects with the id");
+                return;
             }
+
+            if(!getObjectsType(objId).equals(typesId)){
+                System.out.println("Object is not such type");
+                return;
+            }
+
+            Map<String, String> attributes = getAttrIds(typesId);
+            deleteParams(attributes, objId);
+
+            deleteObjectId(objId);
+
+            connection.commit();
+        } catch (SQLException e) {
+            catchLogic(e);
+        } finally {
+            setAutoCommit();
         }
     }
 
 
+
+    /**
+     * Helper methods for catch and finaly block
+     */
+    private void setAutoCommit() {
+        if (isCommit) try {
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    private void catchLogic(SQLException e){
+        e.printStackTrace();
+        DBUtil.showErrorMessage(e);
+
+        try {
+            connection.rollback();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            DBUtil.showErrorMessage(e1);
+        }
+    }
+
+    /**
+     * Abstract methods
+     */
     protected abstract void insertAllIntoParams(Identificateble obj) throws SQLException;
 
     protected abstract void updateRealization(Identificateble obj) throws SQLException;
@@ -438,6 +462,36 @@ public abstract class MetamodelDao {
         }
         return params;
     }
+
+    protected void deleteParams(Map<String, String> attributes, String objId) throws SQLException {
+        String delete = "DELETE PARAMS WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        int row = 0;
+        for(Map.Entry<String, String> attribute : attributes.entrySet()){
+            row += executor.execUpdate(
+                    delete,
+                    stmt -> {
+                        stmt.setString(1, attribute.getValue());
+                        stmt.setString(2, objId);
+                    }
+                    );
+        }
+
+        System.out.println(row + " row was deleted...");
+    }
+
+    protected void deleteObjectId(String objId) throws SQLException {
+        String delete = "DELETE OBJECTS WHERE ID=?";
+
+        int row = executor.execUpdate(
+                delete,
+                stmt -> stmt.setString(1, objId)
+        );
+
+        if(row == 1) System.out.println("Object was deleted successfully");
+        else System.out.println("Was been a problem");
+    }
+
 
     protected List<String> getAllObjectsForType() throws SQLException{
         ArrayList<String> objectIds;

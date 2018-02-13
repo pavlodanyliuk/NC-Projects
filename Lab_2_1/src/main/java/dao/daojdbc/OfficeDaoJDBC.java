@@ -70,7 +70,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public void deleteOffice(String id) {
-
+        deleteObject(id);
     }
 
     @Override

@@ -68,7 +68,7 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
 
     public void deleteEmployee(String id) {
 
-        //TODO: realize method
+        deleteObject(id);
 
     }
 
