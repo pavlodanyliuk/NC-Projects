@@ -2,6 +2,7 @@ package dao.daojdbc;
 
 import dao.daointerfaces.EmployeeDAO;
 import jdbcutil.DBUtil;
+import offices.Department;
 import offices.Employee;
 import offices.Identificateble;
 
@@ -59,16 +60,15 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
         return (Employee)getObject(id);
     }
 
-    @Override
-    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
-        return new Employee(map.get("firstName"), map.get("lastName"), new Integer(map.get("age")), map.get("address"), new DepartmentDaoJDBC(connection, false).getDepartment(map.get("department")), id);
-    }
-
     public void updateEmployee(Employee employee) {
 
+        updateObject(employee, employee.getClass());
+
     }
 
-    public void deleteEmployee(Employee employee) {
+    public void deleteEmployee(String id) {
+
+        //TODO: realize method
 
     }
 
@@ -90,5 +90,35 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
         insertIntoParams(employee.getAge(), map.get("age"), employee.getId());
         insertIntoParams(employee.getLastName(), map.get("lastName"), employee.getId(), false);
         insertIntoParams(employee.getAddress(), map.get("address"), employee.getId(), false);
+    }
+
+    @Override
+    protected void updateRealization(Identificateble obj) throws SQLException {
+        Employee employee = (Employee) obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        updateTextValue(employee.getFirstName(), map.get("firstName"), employee.getId());
+        updateTextValue(employee.getLastName(), map.get("lastName"), employee.getId());
+        updateTextValue(employee.getAddress(), map.get("address"), employee.getId());
+        updateNumValue((long)employee.getAge(), map.get("age"), employee.getId());
+
+
+        Department department = employee.getDepartment();
+        if(!isObjectExistInTable(department.getId()))
+            new DepartmentDaoJDBC(connection, false).addDepartment(department);
+
+        updateReferenceValue(department, department.getClass(), map.get("department"), employee.getId());
+
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Employee(
+                map.get("firstName"),
+                map.get("lastName"),
+                new Integer(map.get("age")), map.get("address"),
+                new DepartmentDaoJDBC(connection, false).getDepartment(map.get("department")),
+                id);
     }
 }

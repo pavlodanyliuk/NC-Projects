@@ -67,8 +67,8 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
     }
 
     @Override
-    public void updateLocation(String id) {
-
+    public void updateLocation(Location location) {
+        updateObject(location, location.getClass());
     }
 
     @Override
@@ -91,5 +91,18 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
         insertIntoParams(location.getRegion(), map.get("region"), location.getId(), false);
         insertIntoParams(location.getAddress(), map.get("address"), location.getId(), false);
         insertIntoParams(location.getIndex(), map.get("index"), location.getId(), false);
+    }
+
+    @Override
+    protected void updateRealization(Identificateble obj) throws SQLException {
+        Location location = (Location) obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        updateTextValue(location.getAddress(), map.get("address"), location.getId());
+        updateTextValue(location.getCountry(), map.get("country"), location.getId());
+        updateTextValue(location.getRegion(), map.get("region"), location.getId());
+        updateTextValue(location.getIndex(), map.get("index"), location.getId());
+
     }
 }

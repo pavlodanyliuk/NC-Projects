@@ -3,7 +3,9 @@ package dao.daojdbc;
 import dao.daointerfaces.OfficeDAO;
 import executor.Executor;
 import jdbcutil.DBUtil;
+import offices.Company;
 import offices.Identificateble;
+import offices.Location;
 import offices.Office;
 
 import java.sql.Connection;
@@ -40,7 +42,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
     public List<Office> getAllOffices() {
         if(typesId == null) return null;
 
-        List<String> objects = null;
+        List<String> objects = new ArrayList<>();
         try {
             objects = getAllObjectsForType();
         } catch (SQLException e) {
@@ -60,18 +62,10 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
         return (Office)getObject(id);
     }
 
-    @Override
-    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
-        return new Office(
-                new CompanyDaoJDBC(connection, false).getCompany(map.get("company")),
-                new LocationDaoJDBC(connection, false).getLocation(map.get("location")),
-                id
-                );
-    }
 
     @Override
-    public void updateOffice(String id) {
-
+    public void updateOffice(Office office) {
+        updateObject(office, office.getClass());
     }
 
     @Override
@@ -102,5 +96,30 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
             new LocationDaoJDBC(connection, false).addLocation(office.getLocation());
         }
         insertIntoParams(office.getLocation().getId(), map.get("location"), office.getId(), true);
+    }
+
+    @Override
+    protected void updateRealization(Identificateble obj) throws SQLException {
+        Office office = (Office) obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        Company company = office.getCompany();
+        if(!isObjectExistInTable(company.getId())) new CompanyDaoJDBC(connection, false).addCompany(company);
+        updateReferenceValue(company, company.getClass(), map.get("company"), office.getId());
+
+        Location location = office.getLocation();
+        if(!isObjectExistInTable(location.getId())) new LocationDaoJDBC(connection, false).addLocation(location);
+        updateReferenceValue(location, location.getClass(), map.get("location"), office.getId());
+
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Office(
+                new CompanyDaoJDBC(connection, false).getCompany(map.get("company")),
+                new LocationDaoJDBC(connection, false).getLocation(map.get("location")),
+                id
+        );
     }
 }

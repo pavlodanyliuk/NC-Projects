@@ -60,13 +60,8 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
     }
 
     @Override
-    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
-        return new Company(map.get("name"), map.get("director"), id);
-    }
-
-    @Override
-    public void updateCompany(String id) {
-
+    public void updateCompany(Company company) {
+        updateObject(company, company.getClass());
     }
 
     @Override
@@ -87,6 +82,22 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
         insertIntoParams(company.getDirector(), map.get("director"), company.getId(),false );
         insertIntoParams(company.getName(), map.get("name"), company.getId(), false);
+    }
+
+    @Override
+    protected void updateRealization(Identificateble obj) throws SQLException {
+        Company company = (Company) obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        updateTextValue(company.getName(), map.get("name"), company.getId());
+        updateTextValue(company.getDirector(), map.get("director"), company.getId());
+
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> map, String id) {
+        return new Company(map.get("name"), map.get("director"), id);
     }
 
 }

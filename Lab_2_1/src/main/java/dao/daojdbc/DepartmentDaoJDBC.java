@@ -62,17 +62,12 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
         return (Department)getObject(id);
     }
 
-    @Override
-    protected Identificateble getConstructedObject(Map<String, String> params, String id) {
-        String name = params.get("name");
-        return new Department(name, new OfficeDaoJDBC(connection, false).getOffice(params.get("office")), id);
-    }
 
     public void updateDepartment(Department department) {
-
+        updateObject(department, Department.class);
     }
 
-    public void deleteDepartment(Department department) {
+    public void deleteDepartment(String id) {
 
     }
 
@@ -80,6 +75,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
         addObject(department, Department.class);
     }
 
+    @Override
     protected void insertAllIntoParams(Identificateble obj) throws SQLException{
         Department department = (Department)obj;
 
@@ -93,6 +89,29 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
         }
         insertIntoParams(department.getOffice().getId(), map.get("office"), department.getId(), true);
     }
+
+    @Override
+    protected void updateRealization(Identificateble obj) throws SQLException {
+        Department department = (Department)obj;
+
+        Map<String, String> map = getAttrIds(typesId);
+
+        updateTextValue(department.getName(), map.get("name"), department.getId());
+
+        Office office = department.getOffice();
+        if(!isObjectExistInTable(office.getId())){
+            new OfficeDaoJDBC(connection, false).addObject(office, office.getClass());
+        }
+        updateReferenceValue(office, office.getClass(), map.get("office"), department.getId());
+
+    }
+
+    @Override
+    protected Identificateble getConstructedObject(Map<String, String> params, String id) {
+        String name = params.get("name");
+        return new Department(name, new OfficeDaoJDBC(connection, false).getOffice(params.get("office")), id);
+    }
+
 
 
 }

@@ -75,7 +75,7 @@ public abstract class MetamodelDao {
         return obj;
     }
 
-    protected abstract Identificateble getConstructedObject(Map<String, String> map, String id);
+
 
 
     /**
@@ -123,9 +123,44 @@ public abstract class MetamodelDao {
         }
     }
 
+    protected void updateObject(Identificateble obj, Class clazz){
+        try {
+            connection.setAutoCommit(false);
+            if(!isObjectExistInTable(obj.getId())){
+                addObject(obj, clazz);
+                return;
+            }
+
+            updateRealization(obj);
+
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                DBUtil.showErrorMessage(e1);
+            }
+        } finally {
+            if (isCommit) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    DBUtil.showErrorMessage(e);
+                }
+            }
+        }
+    }
+
+
     protected abstract void insertAllIntoParams(Identificateble obj) throws SQLException;
 
+    protected abstract void updateRealization(Identificateble obj) throws SQLException;
 
+    protected abstract Identificateble getConstructedObject(Map<String, String> map, String id);
 
     /**
      * Utils methods
@@ -289,6 +324,67 @@ public abstract class MetamodelDao {
                 }
         );
         System.out.println(row + " updated (PARAMS)...");
+    }
+
+
+    /**
+     * Update section
+     */
+    protected void updateTextValue(String text, String attrId, String objId) throws SQLException{
+        String update = "UPDATE PARAMS SET TEXT_VALUE=? WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        int row = executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setString(1, text);
+                    stmt.setString(2, attrId);
+                    stmt.setString(3, objId);
+                }
+        );
+        System.out.println(row + " updated text value (PARAMS)");
+    }
+
+    protected void updateNumValue(Long numb, String attrId, String objId) throws SQLException{
+        String update = "UPDATE PARAMS SET NUMBER_VALUE=? WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        int row = executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setLong(1, numb);
+                    stmt.setString(2, attrId);
+                    stmt.setString(3, objId);
+                }
+        );
+        System.out.println(row + " updated number value (PARAMS)");
+    }
+
+    protected void updateDateValue(Date date, String attrId, String objId) throws SQLException{
+        String update = "UPDATE PARAMS SET DATA_VALUE=? WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        int row = executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setDate(1, date);
+                    stmt.setString(2, attrId);
+                    stmt.setString(3, objId);
+                }
+        );
+        System.out.println(row + " updated date value (PARAMS)");
+    }
+
+    protected void updateReferenceValue(Identificateble refObj, Class clazz, String attrId, String objId) throws SQLException{
+
+        String update = "UPDATE PARAMS SET REFERENCE_VALUE=? WHERE ATTR_ID=? AND OBJ_ID=?";
+
+        int row = executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setString(1, refObj.getId());
+                    stmt.setString(2, attrId);
+                    stmt.setString(3, objId);
+                }
+        );
+        System.out.println(row + " updated reference value (PARAMS)");
     }
 
     protected Map<String, String> getAttrIds (String typeId) throws SQLException {
