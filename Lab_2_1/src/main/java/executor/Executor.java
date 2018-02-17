@@ -20,7 +20,7 @@ public class Executor {
     }
 
     public <T> T execQuery(String query, ResultHandler<T> handler, PreparedStatementHandler handStm) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         handStm.descript(stmt);
 
         stmt.executeQuery();

@@ -1,7 +1,12 @@
 package main;
 
+import dao.daointerfaces.LocationDAO;
+import dao.daojdbc.CompanyDaoJDBC;
 import dao.daojdbc.DepartmentDaoJDBC;
 import dao.daojdbc.EmployeeDaoJDBC;
+import dao.daojdbc.LocationDaoJDBC;
+import grants.GrantManager;
+import grants.Role;
 import jdbcutil.DBType;
 import jdbcutil.DBUtil;
 import offices.*;
@@ -10,6 +15,7 @@ import offices.generator.GeneratorId;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -36,9 +42,20 @@ public class Main {
 
         try {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
+//
+//            EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
+////            LocationDaoJDBC locationDaoJDBC = new LocationDaoJDBC(connection);
+////            CompanyDaoJDBC companyDaoJDBC = new CompanyDaoJDBC(connection);
+////            DepartmentDaoJDBC departmentDaoJDBC = new DepartmentDaoJDBC(connection);
+//
+//            employeeDaoJDBC.addEmployee(vasya);
+            Role admin = new Role("ADMIN");
 
-            EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
-            employeeDaoJDBC.deleteEmployee("16190D933BD");
+            Map<String, Boolean> map = new GrantManager(connection).getGrants(admin, "161A4FCF6F1", "country");
+
+            for(Map.Entry<String, Boolean> maps : map.entrySet()){
+                System.out.println(maps.getKey()+ ":" + maps.getValue());
+            }
 
 
         } catch (SQLException e) {
