@@ -19,6 +19,17 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
         try {
             typesId = isTypesExistInTable(Location.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Location.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -29,6 +40,17 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
         try {
             typesId = isTypesExistInTable(Location.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Location.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -68,7 +90,7 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public void updateLocation(Location location) {
-        updateObject(location, location.getClass());
+        updateObject(location);
     }
 
     @Override
@@ -78,7 +100,7 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public void addLocation(Location location) {
-        addObject(location, Location.class);
+        addObject(location);
     }
 
     @Override

@@ -20,6 +20,17 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
 
         try{
             typesId = isTypesExistInTable(Employee.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Employee.class);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             DBUtil.showErrorMessage(e);
@@ -30,6 +41,17 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
         super(connection, withCommit);
         try{
             typesId = isTypesExistInTable(Employee.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Employee.class);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             DBUtil.showErrorMessage(e);
@@ -62,7 +84,7 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
 
     public void updateEmployee(Employee employee) {
 
-        updateObject(employee, employee.getClass());
+        updateObject(employee);
 
     }
 
@@ -73,7 +95,7 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
     }
 
     public void addEmployee(Employee employee) {
-        addObject(employee, Employee.class);
+        addObject(employee);
     }
 
     @Override

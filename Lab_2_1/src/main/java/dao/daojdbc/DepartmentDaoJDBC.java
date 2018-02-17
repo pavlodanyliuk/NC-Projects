@@ -23,6 +23,20 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
         try {
             typesId = isTypesExistInTable(Department.class.getCanonicalName());
+            parentId = isTypesExistInTable(Office.class.getCanonicalName());
+
+            if(parentId == null){
+                parentId = new OfficeDaoJDBC(connection).typesId;
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Department.class);
+            }
+
+
+
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -33,6 +47,18 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
         try {
             typesId = isTypesExistInTable(Department.class.getCanonicalName());
+            parentId = isTypesExistInTable(Office.class.getCanonicalName());
+
+            if(parentId == null){
+                parentId = new OfficeDaoJDBC(connection).typesId;
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Department.class);
+            }
+
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -64,7 +90,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
 
     public void updateDepartment(Department department) {
-        updateObject(department, Department.class);
+        updateObject(department);
     }
 
     public void deleteDepartment(String id) {
@@ -72,7 +98,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
     }
 
     public void addDepartment(Department department) {
-        addObject(department, Department.class);
+        addObject(department);
     }
 
     @Override
@@ -90,6 +116,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
         insertIntoParams(department.getOffice().getId(), map.get("office"), department.getId(), true);
     }
 
+
     @Override
     protected void updateRealization(Identificateble obj) throws SQLException {
         Department department = (Department)obj;
@@ -100,7 +127,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
         Office office = department.getOffice();
         if(!isObjectExistInTable(office.getId())){
-            new OfficeDaoJDBC(connection, false).addObject(office, office.getClass());
+            new OfficeDaoJDBC(connection, false).addObject(office);
         }
         updateReferenceValue(office, office.getClass(), map.get("office"), department.getId());
 

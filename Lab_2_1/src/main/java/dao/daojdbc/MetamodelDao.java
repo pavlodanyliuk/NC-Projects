@@ -17,6 +17,7 @@ public abstract class MetamodelDao {
     protected final Connection connection;
     protected final Executor executor;
     protected String typesId;
+    protected String parentId;
     protected boolean isCommit = true;
 
     protected MetamodelDao(Connection connection) {
@@ -68,18 +69,13 @@ public abstract class MetamodelDao {
      *Add methods
      */
 
-    protected void addObject(Identificateble obj, Class clazz){
+    protected void addObject(Identificateble obj){
         try {
             connection.setAutoCommit(false);
 
             if(isObjectExistInTable(obj.getId())){
                 System.out.println("Object already exists in Data Base");
                 return;
-            }
-
-            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
-            if(typesId == null){
-                insertInTypesAndAttributes(clazz);
             }
 
             //insert into OBJECT table
@@ -102,11 +98,11 @@ public abstract class MetamodelDao {
      *Update method
      */
 
-    protected void updateObject(Identificateble obj, Class clazz){
+    protected void updateObject(Identificateble obj){
         try {
             connection.setAutoCommit(false);
             if(!isObjectExistInTable(obj.getId())){
-                addObject(obj, clazz);
+                addObject(obj);
                 return;
             }
 
@@ -233,7 +229,7 @@ public abstract class MetamodelDao {
 
     protected void insertInTypesAndAttributes(Class clazz) throws SQLException {
         //insert in Types
-        String insert = "INSERT INTO TYPES (ID, NAME) VALUES (?, ?)";
+        String insert = "INSERT INTO TYPES (ID, NAME, PARENT_ID) VALUES (?, ?, ?)";
 
         typesId = GeneratorId.generateUniqId();
         int row = executor.execUpdate(
@@ -241,6 +237,7 @@ public abstract class MetamodelDao {
                 stmt -> {
                     stmt.setString(1, typesId);
                     stmt.setString(2, clazz.getCanonicalName());
+                    stmt.setString(3, parentId);
                 }
         );
 
@@ -516,5 +513,20 @@ public abstract class MetamodelDao {
 
     protected void setCommit(boolean commit) {
         isCommit = commit;
+    }
+
+    protected String addTypeALL() throws SQLException{
+        String insert = "INSERT INTO TYPES (ID, NAME) VALUES (?, ?)";
+
+        String id = GeneratorId.generateUniqId();
+        executor.execUpdate(
+                insert,
+                stmt -> {
+                    stmt.setString(1, id);
+                    stmt.setString(2, "ALL");
+                }
+        );
+
+        return id;
     }
 }

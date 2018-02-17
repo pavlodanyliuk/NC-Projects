@@ -21,6 +21,17 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
         try {
             typesId = isTypesExistInTable(Office.class.getCanonicalName());
+            parentId = isTypesExistInTable(Location.class.getCanonicalName());
+
+            if(parentId == null){
+                parentId = new LocationDaoJDBC(connection).typesId;
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Office.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -32,6 +43,17 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
         try {
             typesId = isTypesExistInTable(Office.class.getCanonicalName());
+            parentId = isTypesExistInTable(Location.class.getCanonicalName());
+
+            if(parentId == null){
+                parentId = new LocationDaoJDBC(connection).typesId;
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Office.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -65,7 +87,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public void updateOffice(Office office) {
-        updateObject(office, office.getClass());
+        updateObject(office);
     }
 
     @Override
@@ -75,7 +97,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public void addOffice(Office office) {
-        addObject(office, Office.class);
+        addObject(office);
     }
 
 

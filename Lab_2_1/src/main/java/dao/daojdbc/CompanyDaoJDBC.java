@@ -18,6 +18,17 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
         try {
             typesId = isTypesExistInTable(Company.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Company.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -28,6 +39,17 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
         try {
             typesId = isTypesExistInTable(Company.class.getCanonicalName());
+            parentId = isTypesExistInTable("ALL");
+
+            if(parentId == null){
+                parentId = addTypeALL();
+            }
+
+            //if the type doesnt exist, than add into TYPES and ATTRIBUTES tables
+
+            if(typesId == null){
+                insertInTypesAndAttributes(Company.class);
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
@@ -61,7 +83,7 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void updateCompany(Company company) {
-        updateObject(company, company.getClass());
+        updateObject(company);
     }
 
     @Override
@@ -71,7 +93,7 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void addCompany(Company company) {
-        addObject(company, Company.class);
+        addObject(company);
     }
 
     @Override
