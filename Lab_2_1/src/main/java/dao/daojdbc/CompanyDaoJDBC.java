@@ -83,7 +83,7 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void updateCompany(Company company) {
-        updateObject(company);
+        updateObject(company, null);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class CompanyDaoJDBC extends MetamodelDao implements CompanyDAO {
 
     @Override
     public void addCompany(Company company) {
-        addObject(company);
+        addObject(company, null);
     }
 
     @Override

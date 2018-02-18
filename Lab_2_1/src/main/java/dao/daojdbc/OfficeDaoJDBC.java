@@ -87,7 +87,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public void updateOffice(Office office) {
-        updateObject(office);
+        updateObject(office, office.getCompany().getId());
     }
 
     @Override
@@ -97,7 +97,7 @@ public class OfficeDaoJDBC extends MetamodelDao implements OfficeDAO {
 
     @Override
     public void addOffice(Office office) {
-        addObject(office);
+        addObject(office, office.getCompany().getId());
     }
 
 

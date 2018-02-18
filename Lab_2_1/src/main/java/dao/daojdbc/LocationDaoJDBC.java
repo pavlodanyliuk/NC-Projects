@@ -90,7 +90,7 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public void updateLocation(Location location) {
-        updateObject(location);
+        updateObject(location, null);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class LocationDaoJDBC extends MetamodelDao implements LocationDAO {
 
     @Override
     public void addLocation(Location location) {
-        addObject(location);
+        addObject(location, null);
     }
 
     @Override

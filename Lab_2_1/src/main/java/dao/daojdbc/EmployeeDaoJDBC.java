@@ -84,7 +84,7 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
 
     public void updateEmployee(Employee employee) {
 
-        updateObject(employee);
+        updateObject(employee, employee.getDepartment().getId());
 
     }
 
@@ -95,7 +95,7 @@ public class EmployeeDaoJDBC extends MetamodelDao implements EmployeeDAO {
     }
 
     public void addEmployee(Employee employee) {
-        addObject(employee);
+        addObject(employee, employee.getDepartment().getId());
     }
 
     @Override

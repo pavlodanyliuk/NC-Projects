@@ -90,7 +90,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
 
     public void updateDepartment(Department department) {
-        updateObject(department);
+        updateObject(department, department.getOffice().getId());
     }
 
     public void deleteDepartment(String id) {
@@ -98,7 +98,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
     }
 
     public void addDepartment(Department department) {
-        addObject(department);
+        addObject(department, department.getOffice().getId());
     }
 
     @Override
@@ -127,7 +127,7 @@ public class DepartmentDaoJDBC extends MetamodelDao implements DepartmentDAO {
 
         Office office = department.getOffice();
         if(!isObjectExistInTable(office.getId())){
-            new OfficeDaoJDBC(connection, false).addObject(office);
+            new OfficeDaoJDBC(connection, false).addOffice(office);
         }
         updateReferenceValue(office, office.getClass(), map.get("office"), department.getId());
 

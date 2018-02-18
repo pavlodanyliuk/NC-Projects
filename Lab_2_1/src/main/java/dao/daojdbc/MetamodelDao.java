@@ -69,7 +69,7 @@ public abstract class MetamodelDao {
      *Add methods
      */
 
-    protected void addObject(Identificateble obj){
+    protected void addObject(Identificateble obj, String objParentId){
         try {
             connection.setAutoCommit(false);
 
@@ -79,7 +79,7 @@ public abstract class MetamodelDao {
             }
 
             //insert into OBJECT table
-            insertIntoObjects(obj.getId());
+            insertIntoObjects(obj.getId(), objParentId);
 
             //insert into PARAMS table
             insertAllIntoParams(obj);
@@ -98,11 +98,11 @@ public abstract class MetamodelDao {
      *Update method
      */
 
-    protected void updateObject(Identificateble obj){
+    protected void updateObject(Identificateble obj, String objParentId){
         try {
             connection.setAutoCommit(false);
             if(!isObjectExistInTable(obj.getId())){
-                addObject(obj);
+                addObject(obj, objParentId);
                 return;
             }
 
@@ -273,14 +273,15 @@ public abstract class MetamodelDao {
 
     }
 
-    protected void insertIntoObjects(String objId) throws SQLException{
-        String insert = "INSERT INTO OBJECTS (ID, TYPE_ID) VALUES (?, ?)";
+    protected void insertIntoObjects(String objId, String objParentId) throws SQLException{
+        String insert = "INSERT INTO OBJECTS (ID, TYPE_ID, PARENT_ID) VALUES (?, ?, ?)";
 
         int row = executor.execUpdate(
                 insert,
                 stmt -> {
                     stmt.setString(1, objId);
                     stmt.setString(2, typesId);
+                    stmt.setString(3, objParentId);
                 }
         );
         System.out.println(row + " updated (OBJECTS)...");
