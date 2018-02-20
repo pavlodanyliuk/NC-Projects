@@ -51,12 +51,15 @@ public class Main {
 //            employeeDaoJDBC.addEmployee(vasya);
             Role admin = new Role("ADMIN");
 
-            Map<String, Boolean> map = new GrantManager(connection).getGrants(admin, "161AADDEB3B", "firstName");
+//            Map<String, Boolean> map = new GrantManager(connection).getGrants(admin, "161AADDEB3B", "firstName");
+//
+//            for(Map.Entry<String, Boolean> maps : map.entrySet()){
+//                System.out.println(maps.getKey()+ ":" + maps.getValue());
+//            }
 
-            for(Map.Entry<String, Boolean> maps : map.entrySet()){
-                System.out.println(maps.getKey()+ ":" + maps.getValue());
-            }
+            GrantManager grantManager = new GrantManager(connection);
 
+            grantManager.setGrantsForObject(admin, "161AADDEA4A",true, true);
 
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
