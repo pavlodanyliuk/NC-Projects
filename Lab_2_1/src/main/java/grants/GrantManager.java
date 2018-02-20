@@ -46,20 +46,172 @@ public class GrantManager {
     }
 
     public void setGrantsForType(Role role, String canonicalName, boolean read, boolean write){
-        //TODO
+        try {
+            connection.setAutoCommit(false);
+
+            String typeId = getTypeIdByName(canonicalName);
+            if(typeId == null){
+                System.out.println("There is not type with such name");
+                return;
+            }
+
+            insertIntoTypeGrants(role, typeId, read, write);
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                DBUtil.showErrorMessage(e1);
+            }
+
+        } finally {
+
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                DBUtil.showErrorMessage(e);
+            }
+
+        }
     }
 
+
     public void setGrantsForAttribute(Role role, String canonicalName, String attrName, boolean read, boolean write){
-        //TODO
+        try {
+            connection.setAutoCommit(false);
+
+            String attrId = getAttrIdByType(canonicalName, attrName);
+
+            if(attrId == null){
+                System.out.println("There is not attribute with such name or for such type");
+                return;
+            }
+
+            insertIntoAttrGrants (role, attrId, read, write);
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                DBUtil.showErrorMessage(e1);
+            }
+
+        } finally {
+
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                DBUtil.showErrorMessage(e);
+            }
+
+        }
     }
 
     public void setGrantsForObject(Role role, String objId, boolean read, boolean write){
-        //TODO
+        try {
+            connection.setAutoCommit(false);
+
+            insertIntoObjGrants (role, objId, read, write);
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                DBUtil.showErrorMessage(e1);
+            }
+
+        } finally {
+
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                DBUtil.showErrorMessage(e);
+            }
+
+        }
     }
+
 
 
     /**
      *Additional private methods
+     *
+     * Insert methods
+     */
+
+    private void insertIntoObjGrants(Role role, String objId, boolean read, boolean write) throws SQLException{
+        String update = "INSERT INTO GRANTOBJECTS(ROLE,OBJ_ID,READ,WRITE) " +
+                "VALUES(?,?,?,?)";
+
+        int row = insertIntoGrants(update, role, objId, read, write);
+
+        System.out.println("Add new grant to objects. " + row + " was update");
+    }
+
+    private void insertIntoAttrGrants(Role role, String attrId, boolean read, boolean write) throws SQLException{
+        String update = "INSERT INTO GRANTATTR(ROLE,ATTR_ID,READ,WRITE) " +
+                "VALUES(?,?,?,?)";
+
+        int row = insertIntoGrants(update, role, attrId, read, write);
+
+        System.out.println("Add new grant to attributes. " + row + " was update");
+    }
+
+    private void insertIntoTypeGrants(Role role, String typeId, boolean read, boolean write) throws SQLException{
+        String update = "INSERT INTO GRANTTYPES(ROLE,TYPE_ID,READ,WRITE) " +
+                "VALUES(?,?,?,?)";
+
+        int row = insertIntoGrants(update, role, typeId, read, write);
+
+        System.out.println("Add new grant to types. " + row + " was update");
+    }
+
+    private int insertIntoGrants(String update, Role role, String id, boolean read, boolean write) throws SQLException {
+        final int readInt;
+        final int writeInt;
+
+        if(read) readInt = 1;
+        else readInt = 0;
+
+        if(write) writeInt = 1;
+        else writeInt = 0;
+
+        return executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setString(1, role.getName());
+                    stmt.setString(2, id);
+                    stmt.setInt(3, readInt);
+                    stmt.setInt(4, writeInt);
+                }
+        );
+    }
+
+
+
+    /**
+     *Get Methods
      */
 
     private Map<String, Boolean> getGrantsForType(Role role, String typeId) throws SQLException{
@@ -214,5 +366,37 @@ public class GrantManager {
                 stmt -> stmt.setString(1, objId)
         );
     }
+
+    private String getTypeIdByName(String canonicalName) throws SQLException {
+        String query = "SELECT T.ID FROM TYPES T  WHERE T.NAME=?";
+
+        return executor.execQuery(
+                query,
+                resultSet -> {
+                    if(!resultSet.next()) return null;
+                    return resultSet.getString("ID");
+                },
+                stmt -> stmt.setString(1, canonicalName)
+        );
+    }
+
+    private String getAttrIdByType(String canonicalName, String attrName) throws SQLException {
+        String query = "SELECT A.ID FROM ATTRIBUTES A " +
+                "INNER JOIN TYPES T ON T.ID = A.TYPE_ID " +
+                "WHERE T.NAME=? AND A.NAME=?";
+
+        return executor.execQuery(
+                query,
+                resultSet -> {
+                    if(!resultSet.next()) return null;
+                    return resultSet.getString("ID");
+                },
+                stmt -> {
+                    stmt.setString(1, canonicalName);
+                    stmt.setString(2, attrName);
+                }
+        );
+    }
+
 
 }

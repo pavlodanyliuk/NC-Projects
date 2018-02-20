@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Role {
     private String name;
-    private List<Grant> grants;
 
     public Role(String name){
         this.name = name;
@@ -19,11 +18,4 @@ public class Role {
         return name;
     }
 
-    public List<Grant> getGrants() {
-        return grants;
-    }
-
-    public void setGrants(List<Grant> grants) {
-        this.grants = grants;
-    }
 }
