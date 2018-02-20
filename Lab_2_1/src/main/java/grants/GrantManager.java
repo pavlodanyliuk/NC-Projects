@@ -152,6 +152,59 @@ public class GrantManager {
         }
     }
 
+    public void changeGrantsForType(Role role, String canonicalName, boolean read, boolean write){
+        try {
+            String typeId = getTypeIdByName(canonicalName);
+            if(typeId == null){
+                setGrantsForType(role, canonicalName, read, write);
+                return;
+            }
+
+            updTypeGrants(role, typeId, read, write);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+        }
+    }
+
+
+    public void changeGrantsForObject(Role role, String objId, boolean read, boolean write){
+        try {
+
+            if(!isObjectExist(objId)){
+                setGrantsForObject(role, objId, read, write);
+                return;
+            }
+
+            updObjGrants(role, objId, read, write);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+        }
+    }
+
+
+    public void changeGrantsForAttr(Role role, String canonicalName, String attrName, boolean read, boolean write){
+        try {
+            String attrId = getAttrIdByType(canonicalName, attrName);
+            if(attrId == null){
+                setGrantsForAttribute(role, canonicalName, attrName, read, write);
+                return;
+            }
+
+            updAttrGrants(role, attrId, read, write);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+
+        }
+    }
+
 
 
     /**
@@ -207,8 +260,55 @@ public class GrantManager {
                 }
         );
     }
+    /**
+     * Update Methods
+     */
 
+    private int updGrants(Role role, String id, boolean read, boolean write, String update) throws SQLException {
+        final int readInt;
+        final int writeInt;
 
+        if(read) readInt = 1;
+        else readInt = 0;
+
+        if(write) writeInt = 1;
+        else writeInt = 0;
+
+        int row = executor.execUpdate(
+                update,
+                stmt -> {
+                    stmt.setInt(1, readInt);
+                    stmt.setInt(2, writeInt);
+                    stmt.setString(3, id);
+                    stmt.setString(4, role.getName());
+                }
+        );
+
+        return row;
+    }
+    private void updTypeGrants(Role role, String typeId, boolean read, boolean write) throws SQLException {
+        String update = "UPDATE GRANTTYPES SET READ=?,WRITE=? WHERE TYPE_ID=? AND ROLE=?";
+
+        int row = updGrants(role, typeId, read, write, update);
+
+        System.out.println("Types: " + row + " was updated");
+    }
+
+    private void updObjGrants(Role role, String objId, boolean read, boolean write) throws SQLException {
+        String update = "UPDATE GRANTOBJECTS SET READ=?,WRITE=? WHERE OBJ_ID=? AND ROLE=?";
+
+        int row = updGrants(role, objId, read, write, update);
+
+        System.out.println("Object: " + row + " was updated");
+    }
+
+    private void updAttrGrants(Role role, String attrId, boolean read, boolean write) throws SQLException {
+        String update = "UPDATE GRANTATTR SET READ=?,WRITE=? WHERE ATTR_ID=? AND ROLE=?";
+
+        int row = updGrants(role, attrId, read, write, update);
+
+        System.out.println("Attributes: " + row + " was updated");
+    }
 
     /**
      *Get Methods
@@ -395,6 +495,19 @@ public class GrantManager {
                     stmt.setString(1, canonicalName);
                     stmt.setString(2, attrName);
                 }
+        );
+    }
+
+    private boolean isObjectExist(String objId) throws SQLException {
+        String query = "SELECT * FROM OBJECTS WHERE ID=?";
+
+        return executor.execQuery(
+                query,
+                resultSet -> {
+                    if(!resultSet.next()) return false;
+                    return true;
+                },
+                stmt -> stmt.setString(1, objId)
         );
     }
 
