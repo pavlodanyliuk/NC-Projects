@@ -206,6 +206,67 @@ public class GrantManager {
     }
 
 
+    public void deleteGrantsForType(Role role, String canonicalName){
+        try{
+            String typeId = getTypeIdByName(canonicalName);
+
+            if (typeId == null){
+                System.out.println("The type is not exists");
+                return;
+            }
+
+            String delete = "DELETE FROM GRANTTYPES WHERE TYPE_ID=? AND ROLE=?";
+
+            int row = dropGrants(role, typeId, delete);
+
+            System.out.println(row + " was deleted from GRANTTYPES");
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    public void deleteGrantsForObject(Role role, String objId){
+        try{
+            if (!isObjectExist(objId)){
+                System.out.println("The object is not exists");
+                return;
+            }
+
+            String delete = "DELETE FROM GRANTOBJECTS WHERE OBJ_ID=? AND ROLE=?";
+
+            int row = dropGrants(role, objId, delete);
+
+            System.out.println(row + " was deleted from GRANTOBJECTS");
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    public void deleteGrantsForAttr(Role role, String canonicalName, String attrName){
+        try{
+
+            String attrId = getAttrIdByType(canonicalName, attrName);
+
+            if (attrId == null){
+                System.out.println("The attribute is not exists");
+                return;
+            }
+
+            String delete = "DELETE FROM GRANTATTR WHERE ATTR_ID=? AND ROLE=?";
+
+            int row = dropGrants(role, attrId, delete);
+
+            System.out.println(row + " was deleted from GRANTATTR");
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            DBUtil.showErrorMessage(e);
+        }
+    }
 
     /**
      *Additional private methods
@@ -261,6 +322,21 @@ public class GrantManager {
         );
     }
     /**
+     * Delete Methods
+     */
+
+    private int dropGrants(Role role, String id, String delete) throws SQLException{
+        return executor.execUpdate(
+                delete,
+                stmt -> {
+                    stmt.setString(1, id);
+                    stmt.setString(2, role.getName());
+                }
+
+        );
+    }
+
+    /**
      * Update Methods
      */
 
@@ -274,7 +350,7 @@ public class GrantManager {
         if(write) writeInt = 1;
         else writeInt = 0;
 
-        int row = executor.execUpdate(
+        return executor.execUpdate(
                 update,
                 stmt -> {
                     stmt.setInt(1, readInt);
@@ -283,8 +359,6 @@ public class GrantManager {
                     stmt.setString(4, role.getName());
                 }
         );
-
-        return row;
     }
     private void updTypeGrants(Role role, String typeId, boolean read, boolean write) throws SQLException {
         String update = "UPDATE GRANTTYPES SET READ=?,WRITE=? WHERE TYPE_ID=? AND ROLE=?";
@@ -309,6 +383,7 @@ public class GrantManager {
 
         System.out.println("Attributes: " + row + " was updated");
     }
+
 
     /**
      *Get Methods
