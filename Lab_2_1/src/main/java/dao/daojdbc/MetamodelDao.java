@@ -19,14 +19,16 @@ public abstract class MetamodelDao {
     protected String typesId;
     protected String parentId;
     protected boolean isCommit = true;
+    private Cache cache;
+    private int CACHE_SIZE = 100;
 
     protected MetamodelDao(Connection connection) {
         this.connection = connection;
         this.executor = new Executor(connection);
+        this.cache = new Cache(CACHE_SIZE);
     }
     protected MetamodelDao(Connection connection, boolean isCommit) {
-        this.connection = connection;
-        this.executor = new Executor(connection);
+        this(connection);
         this.isCommit = isCommit;
     }
 
@@ -39,7 +41,9 @@ public abstract class MetamodelDao {
      */
 
     protected Identificateble getObject(String id){
-        Identificateble obj = null;
+        Identificateble obj = cache.getObjectIfExists(id);
+        if(obj != null) return obj;
+
         try {
             connection.setAutoCommit(false);
 
@@ -50,6 +54,8 @@ public abstract class MetamodelDao {
             Map<String, String> params = getParams(attrIds, id);
 
             obj = getConstructedObject(params, id);
+
+            if(obj != null) cache.addInCache(obj);
 
             if (isCommit) connection.commit();
 
@@ -99,6 +105,8 @@ public abstract class MetamodelDao {
      */
 
     protected void updateObject(Identificateble obj, String objParentId){
+        cache.deleteFromCache(obj.getId());
+
         try {
             connection.setAutoCommit(false);
             if(!isObjectExistInTable(obj.getId())){
@@ -107,6 +115,8 @@ public abstract class MetamodelDao {
             }
 
             updateRealization(obj);
+
+            cache.addInCache(obj);
 
             connection.commit();
         } catch (SQLException e) {
@@ -121,6 +131,8 @@ public abstract class MetamodelDao {
      */
 
     public void deleteObject(String objId){
+        cache.deleteFromCache(objId);
+
         try{
             connection.setAutoCommit(false);
 
