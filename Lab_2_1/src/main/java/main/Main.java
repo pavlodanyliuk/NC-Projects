@@ -1,10 +1,7 @@
 package main;
 
 import dao.daointerfaces.LocationDAO;
-import dao.daojdbc.CompanyDaoJDBC;
-import dao.daojdbc.DepartmentDaoJDBC;
-import dao.daojdbc.EmployeeDaoJDBC;
-import dao.daojdbc.LocationDaoJDBC;
+import dao.daojdbc.*;
 import grants.GrantManager;
 import grants.Role;
 import jdbcutil.DBType;
@@ -42,14 +39,33 @@ public class Main {
 
         try {
             Connection connection = DBUtil.getConnection(DBType.ORACLESQL);
-//
-//            EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
+
+            EmployeeDaoJDBC employeeDaoJDBC = new EmployeeDaoJDBC(connection);
 ////            LocationDaoJDBC locationDaoJDBC = new LocationDaoJDBC(connection);
 ////            CompanyDaoJDBC companyDaoJDBC = new CompanyDaoJDBC(connection);
 ////            DepartmentDaoJDBC departmentDaoJDBC = new DepartmentDaoJDBC(connection);
 //
-//            employeeDaoJDBC.addEmployee(vasya);
-            Role admin = new Role("ADMIN");
+
+            employeeDaoJDBC.addEmployee(vasya);
+
+
+            System.out.println("before");
+            employeeDaoJDBC.getEmployee(vasya.getId());
+
+            System.out.println("after");
+            employeeDaoJDBC.getEmployee(vasya.getId());
+
+            System.out.println("a1");
+            employeeDaoJDBC.getEmployee(vasya.getId());
+            System.out.println("a2");
+            employeeDaoJDBC.getEmployee(vasya.getId());
+
+            System.out.println("a3");
+            employeeDaoJDBC.getEmployee(vasya.getId());
+
+            System.out.println("a4");
+
+//            Role admin = new Role("ADMIN");
 
 //            Map<String, Boolean> map = new GrantManager(connection).getGrants(admin, "161AADDEB3B", "firstName");
 //
@@ -57,9 +73,15 @@ public class Main {
 //                System.out.println(maps.getKey()+ ":" + maps.getValue());
 //            }
 
-            GrantManager grantManager = new GrantManager(connection);
+//            GrantManager grantManager = new GrantManager(connection);
 
-            grantManager.setGrantsForObject(admin, "161AADDEA4A",true, true);
+//            grantManager.changeGrantsForAttr(admin, Employee.class.getCanonicalName(), "lastName",false, false);
+//            grantManager.deleteGrantsForType(admin, Employee.class.getCanonicalName());
+//            grantManager.deleteGrantsForObject(admin, "161AADDEA4A");
+
+//            grantManager.deleteGrantsForAttr(admin, Employee.class.getCanonicalName(), "lastName");
+
+
 
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
